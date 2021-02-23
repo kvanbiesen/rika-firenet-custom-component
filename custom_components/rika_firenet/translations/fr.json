@@ -4,18 +4,18 @@
     "step": {
       "user": {
         "title": "Rika Firenet",
-        "description": "Setup integration with Rika Firenet",
+        "description": "Configurez l'intégration de Rika Firenet",
         "data": {
-          "username": "Username",
-          "password": "Password"
+          "Email": "Username",
+          "Mot de passe": "Password"
         }
       }
     },
     "error": {
-      "auth": "Username/Password is wrong."
+      "auth": "Email/Mot de passe erroné."
     },
     "abort": {
-      "single_instance_allowed": "Only a single configuration of Rika Firenet is allowed."
+      "single_instance_allowed": "Une seule instance de l'intégration Rika Firenet est authorisée."
     }
   },
   "options": {
@@ -37,10 +37,10 @@
       "stove_off": "Poêle éteint",
       "standby": "En veille",
       "external_request": "Demande externe",
-      "sub_state_unknown": "Substate inconnu",
+      "sub_state_unknown": "État inconnu",
       "ignition_on": "Allumage",
       "starting_up": "Démarrage",
-      "running": "Baking",
+      "running": "En fonction",
       "big_clean": "Nettoyage approfondi",
       "clean": "Nettoyage",
       "burn_off": "Fin de combustion",
