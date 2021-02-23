@@ -197,7 +197,7 @@ class RikaFirenetStove:
         return float(self._state['controls']['targetTemperature'])
 
     def get_stove_operation_mode(self):
-        return float(self._state['controls']['operatingMode'])
+        return self._state['controls']['operatingMode']
 
     def set_stove_operation_mode(self, mode):
         _LOGGER.info("set_stove_operation_mode(): " + str(mode))
