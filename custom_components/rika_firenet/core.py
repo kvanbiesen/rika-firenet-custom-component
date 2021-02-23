@@ -227,10 +227,7 @@ class RikaFirenetStove:
         return float(self._state['controls']['targetTemperature'])
 
     def get_room_temperature(self):
-        return float(self._state['sensors']['inputRoomTemperature'])
-      
-    def get_flame_temperature(self):
-        return float(self._state['sensors']['inputFlameTemperature'])      
+        return float(self._state['sensors']['inputRoomTemperature'])  
       
     def get_diag_motor(self):
         return float(self._state['sensors']['outputDischargeMotor'])  
