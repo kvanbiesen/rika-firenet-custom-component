@@ -6,8 +6,8 @@
         "title": "Rika Firenet",
         "description": "Configurez l'intégration de Rika Firenet",
         "data": {
-          "username": "Email",
-          "password": "Mot de passe"
+          "username": "Username",
+          "password": "Password"
         }
       }
     },
