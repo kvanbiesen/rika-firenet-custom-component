@@ -325,23 +325,22 @@ class RikaFirenetStove:
     def get_hvac_mode(self):
         if not self.is_stove_on():
             return HVAC_MODE_OFF
-
-        if self.get_stove_operation_mode() is 0:
-            return HVAC_MODE_HEAT
-
-        if not self.is_heating_times_active_for_comfort():
-            return HVAC_MODE_HEAT
-
-        return HVAC_MODE_AUTO
+ 
+        if self.get_stove_operation_mode() is 2:
+            return HVAC_MODE_AUTO    
+      
+        return HVAC_MODE_HEAT
 
     def set_hvac_mode(self, hvac_mode):
         if hvac_mode == HVAC_MODE_OFF:
             self.turn_off()
         elif hvac_mode == HVAC_MODE_AUTO:
-            self.set_heating_times_active_for_comfort(True)
+            self.set_stove_operation_mode(2)
         elif hvac_mode == HVAC_MODE_HEAT:
-            self.set_heating_times_active_for_comfort(False)
+            self.set_stove_operation_mode(0)
 
+
+            
     def set_heating_times_active_for_comfort(self, active):
         _LOGGER.info("set_heating_times_active_for_comfort(): " + str(active))
 
@@ -351,6 +350,30 @@ class RikaFirenetStove:
 
         self._coordinator.set_stove_controls(self._id, data)
         self.sync_state()
+        
+    def is_stove_heating_times_on(self):
+        if self.get_stove_operation_mode() is 2:
+            if not self.is_heating_times_active_for_comfort():
+                return False
+            else:
+                return True
+        elif self.get_stove_operation_mode() is 0:
+            return False
+        elif self.get_stove_operation_mode() is 1:
+            return True
+            
+
+    def set_heating_times_on(self):  
+        if self.get_stove_operation_mode() is 2:
+            self.set_heating_times_active_for_comfort(True)
+        else:
+            self.set_stove_operation_mode(1)
+    
+    def set_heating_times_off(self):
+        if self.get_stove_operation_mode() is 2:
+            self.set_heating_times_active_for_comfort(False)
+        else:
+            self.set_stove_operation_mode(0)      
 
     def turn_convection_fan1_on(self):
         self.turn_convection_fan1_on_off(True)
