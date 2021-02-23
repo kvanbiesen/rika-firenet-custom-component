@@ -230,13 +230,13 @@ class RikaFirenetStove:
         return float(self._state['sensors']['inputRoomTemperature'])  
       
     def get_diag_motor(self):
-        return float(self._state['sensors']['outputDischargeMotor'])  
+        return self._state['sensors']['outputDischargeMotor']
       
     def get_fan_velocity(self):
-        return float(self._state['sensors']['outputIDFan']) 
+        return self._state['sensors']['outputIDFan']
       
     def get_pellets_before_service(self):
-        return float(self._state['sensors']['parameterFeedRateService']) 
+        return self._state['sensors']['parameterFeedRateService']
             
     def get_room_power_request(self):
         return int(self._state['controls']['RoomPowerRequest'])
