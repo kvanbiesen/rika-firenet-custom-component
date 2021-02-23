@@ -22,11 +22,11 @@
     "step": {
       "user": {
         "data": {
-          "defaultTemperature": "Default temperature",
-          "climate": "Climate enabled",
-          "sensor": "Sensor enabled",
-          "switch": "Switch enabled",
-          "number": "Number enabled"
+          "defaultTemperature": "Température par défaut",
+          "climate": "Climate activé",
+          "sensor": "Sensor activé",
+          "switch": "Switch activé",
+          "number": "Number activé"
         }
       }
     }
