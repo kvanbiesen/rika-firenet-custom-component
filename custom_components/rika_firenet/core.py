@@ -363,13 +363,13 @@ class RikaFirenetStove:
             return True
             
 
-    def set_heating_times_on(self):  
+    def turn_heating_times_on(self):  
         if self.get_stove_operation_mode() is 2:
             self.set_heating_times_active_for_comfort(True)
         else:
             self.set_stove_operation_mode(1)
     
-    def set_heating_times_off(self):
+    def turn_heating_times_off(self):
         if self.get_stove_operation_mode() is 2:
             self.set_heating_times_active_for_comfort(False)
         else:
