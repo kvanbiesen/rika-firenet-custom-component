@@ -21,7 +21,10 @@ DEVICE_SENSORS = [
     "room temperature",
     "room thermostat",
     "room power request",
-    "heating power"
+    "heating power",
+    "pellets before service",
+    "fan velocity",
+    "diag motor"
 ]
 
 
@@ -72,12 +75,22 @@ class RikaFirenetStoveSensor(RikaFirenetEntity):
             return self._stove.get_room_power_request()
         elif self._sensor == "heating power":
             return self._stove.get_heating_power()
+        elif self._sensor == "pellets before service":
+            return self._stove.get_pellets_before_service()
+        elif self._sensor == "diag motor":
+            return self._stove.get_diag_motor()
+        elif self._sensor == "fan velocity":
+            return self._stove.get_fan_velocity()        
+
+
+    
+    
 
     @property
     def unit_of_measurement(self):
         if "temperature" in self._sensor or "thermostat" in self._sensor:
             return TEMP_CELSIUS
-        elif self._sensor == "stove consumption":
+        elif self._sensor == "stove consumption" or self._sensor == "pellets before service":
             return MASS_KILOGRAMS
         elif self._sensor == "stove runtime":
             return TIME_HOURS
@@ -88,7 +101,7 @@ class RikaFirenetStoveSensor(RikaFirenetEntity):
     def icon(self):
         if "temperature" in self._sensor or "thermostat" in self._sensor:
             return "mdi:thermometer"
-        elif self._sensor == "stove consumption":
+        elif self._sensor == "stove consumption" or self._sensor == "pellets before service":
             return "mdi:weight-kilogram"
         elif self._sensor == "stove runtime":
             return "mdi:timelapse"
@@ -96,5 +109,5 @@ class RikaFirenetStoveSensor(RikaFirenetEntity):
             return "mdi:fire"
         elif self._sensor == "stove status":
             return "mdi:information-outline"
-        elif self._sensor == "heating power":
+        elif self._sensor == "heating power" or self._sensor == "diag motor" or self._sensor == "fan velocity":
             return "mdi:speedometer"
