@@ -367,15 +367,14 @@ class RikaFirenetStove:
             
 
     def turn_heating_times_on(self):  
-        if self.get_stove_operation_mode() is 2:
-            self.set_heating_times_active_for_comfort(True)
-        else:
+        self.set_heating_times_active_for_comfort(True)
+        if not self.get_stove_operation_mode() is 2:
             self.set_stove_operation_mode(1)
+
     
     def turn_heating_times_off(self):
-        if self.get_stove_operation_mode() is 2:
-            self.set_heating_times_active_for_comfort(False)
-        else:
+        self.set_heating_times_active_for_comfort(False)
+        if not self.get_stove_operation_mode() is 2:
             self.set_stove_operation_mode(0)      
 
     def turn_convection_fan1_on(self):
