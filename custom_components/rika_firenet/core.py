@@ -337,7 +337,10 @@ class RikaFirenetStove:
         elif hvac_mode == HVAC_MODE_AUTO:
             self.set_stove_operation_mode(2)
         elif hvac_mode == HVAC_MODE_HEAT:
-            self.set_stove_operation_mode(0)
+            if self.is_stove_heating_times_on:
+                self.set_stove_operation_mode(1)
+            else:
+                self.set_stove_operation_mode(0)
 
 
             
