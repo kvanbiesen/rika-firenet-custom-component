@@ -376,6 +376,7 @@ class RikaFirenetStove:
     def turn_heating_times_off(self):
         data = self.get_control_state()
         data['onOff'] = True
+        data['heatingTimesActiveForComfort'] = False
         if not self.get_stove_operation_mode() is 2:
             data['operatingMode'] = int(0)
         self._coordinator.set_stove_controls(self._id, data)
