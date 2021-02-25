@@ -16,7 +16,7 @@ from .entity import RikaFirenetEntity
 
 _LOGGER = logging.getLogger(__name__)
 
-SUPPORT_FLAGS = SUPPORT_TARGET_TEMPERATURE  # | SUPPORT_PRESET_MODE
+SUPPORT_FLAGS = SUPPORT_TARGET_TEMPERATURE | SUPPORT_PRESET_MODE
 
 PRESET_HOME = "Manual" # value forced
 
@@ -61,7 +61,7 @@ class RikaFirenetStoveClimate(RikaFirenetEntity, ClimateEntity):
     def preset_modes(self):
         """Return a list of available preset modes."""
         return SUPPORT_PRESET
-      
+
     @property
     def preset_mode(self):
         """Return the current preset mode, e.g., home, away, temp."""
