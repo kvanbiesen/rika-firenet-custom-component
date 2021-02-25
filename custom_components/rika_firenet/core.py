@@ -6,8 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from homeassistant.components.climate.const import (HVAC_MODE_AUTO,
                                                     HVAC_MODE_HEAT,
-                                                    HVAC_MODE_OFF, PRESET_AWAY,
-                                                    PRESET_HOME)
+                                                    HVAC_MODE_OFF)
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from .const import DOMAIN
 
@@ -165,21 +164,21 @@ class RikaFirenetStove:
     def get_control_state(self):
         return self._state['controls']
 
-    def set_presence(self, presence=PRESET_HOME):
-        room_thermostat = self.get_room_thermostat()
-        _LOGGER.info("set_presence(): " + str(presence) +
-                     " current room thermostat: " + str(room_thermostat))
-
-        if presence == PRESET_AWAY:
-            self._previous_temperature = room_thermostat
-            self.set_stove_temperature(self.get_stove_set_back_temperature())
-        elif presence == PRESET_HOME:
-            if self._previous_temperature:
-                self.set_stove_temperature(self._previous_temperature)
-            else:
-                self.set_stove_temperature(
-                    self._coordinator.get_default_temperature())
-            self._previous_temperature = None
+#     def set_presence(self, presence=PRESET_HOME):
+#        room_thermostat = self.get_room_thermostat()
+#        _LOGGER.info("set_presence(): " + str(presence) +
+#                     " current room thermostat: " + str(room_thermostat))
+#
+#        if presence == PRESET_AWAY:
+#            self._previous_temperature = room_thermostat
+#            self.set_stove_temperature(self.get_stove_set_back_temperature())
+#        elif presence == PRESET_HOME:
+#            if self._previous_temperature:
+#                self.set_stove_temperature(self._previous_temperature)
+#            else:
+#                self.set_stove_temperature(
+#                    self._coordinator.get_default_temperature())
+#            self._previous_temperature = None
 
     def get_state(self):
         return self._state
@@ -325,22 +324,20 @@ class RikaFirenetStove:
     def get_hvac_mode(self):
         if not self.is_stove_on():
             return HVAC_MODE_OFF
- 
-        if self.get_stove_operation_mode() is 2:
+        elif self.is_stove_heating_times_on() == True:
             return HVAC_MODE_AUTO    
-      
-        return HVAC_MODE_HEAT
+        elif self.is_stove_heating_times_on() == False: 
+            return HVAC_MODE_HEAT
 
     def set_hvac_mode(self, hvac_mode):
         if hvac_mode == HVAC_MODE_OFF:
             self.turn_off()
         elif hvac_mode == HVAC_MODE_AUTO:
-            self.set_stove_operation_mode(2)
+            _LOGGER.info("Turn heating times on")
+            self.turn_heating_times_on()
         elif hvac_mode == HVAC_MODE_HEAT:
-            if self.is_stove_heating_times_on:
-                self.set_stove_operation_mode(1)
-            else:
-                self.set_stove_operation_mode(0)
+            _LOGGER.info("Turn heating times off")
+            self.turn_heating_times_off()
 
 
             
@@ -366,16 +363,23 @@ class RikaFirenetStove:
             return True
             
 
-    def turn_heating_times_on(self):  
-        self.set_heating_times_active_for_comfort(True)
+    def turn_heating_times_on(self): 
+        data = self.get_control_state()
+        data['onOff'] = True
+        data['heatingTimesActiveForComfort'] = True        
         if not self.get_stove_operation_mode() is 2:
-            self.set_stove_operation_mode(1)
+            data['operatingMode'] = int(1)
+        self._coordinator.set_stove_controls(self._id, data)
+        self.sync_state()
 
     
     def turn_heating_times_off(self):
-        self.set_heating_times_active_for_comfort(False)
+        data = self.get_control_state()
+        data['onOff'] = True
         if not self.get_stove_operation_mode() is 2:
-            self.set_stove_operation_mode(0)      
+            data['operatingMode'] = int(0)
+        self._coordinator.set_stove_controls(self._id, data)
+        self.sync_state()  
 
     def turn_convection_fan1_on(self):
         self.turn_convection_fan1_on_off(True)
