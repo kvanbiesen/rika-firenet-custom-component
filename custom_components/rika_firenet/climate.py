@@ -4,7 +4,10 @@ from homeassistant.components.climate import ClimateEntity
 from homeassistant.components.climate.const import (HVAC_MODE_AUTO,
                                                     HVAC_MODE_HEAT,
                                                     HVAC_MODE_OFF,
-                                                    SUPPORT_TARGET_TEMPERATURE)
+                                                    SUPPORT_PRESET_MODE,
+                                                    SUPPORT_TARGET_TEMPERATURE,
+                                                    PRESET_COMFORT,
+                                                    PRESET_HOME)
 from homeassistant.const import (ATTR_TEMPERATURE, TEMP_CELSIUS)
 
 from .const import (DOMAIN, SUPPORT_PRESET)
@@ -14,6 +17,8 @@ from .entity import RikaFirenetEntity
 _LOGGER = logging.getLogger(__name__)
 
 SUPPORT_FLAGS = SUPPORT_TARGET_TEMPERATURE  # | SUPPORT_PRESET_MODE
+
+PRESET_HOME = "Manual" # value forced
 
 MIN_TEMP = 16
 MAX_TEMP = 30
@@ -56,10 +61,28 @@ class RikaFirenetStoveClimate(RikaFirenetEntity, ClimateEntity):
     def preset_modes(self):
         """Return a list of available preset modes."""
         return SUPPORT_PRESET
+      
+    @property
+    def preset_mode(self):
+        """Return the current preset mode, e.g., home, away, temp."""
+        if self._stove.get_stove_operation_mode() is 2:
+            return PRESET_COMFORT
+        else:
+            return PRESET_HOME      
 
     def set_preset_mode(self, preset_mode):
         """Set new preset mode."""
-        self._stove.set_presence(preset_mode)
+        _LOGGER.info('preset mode : ' + str(preset_mode))
+        if preset_mode == PRESET_COMFORT:
+            _LOGGER.info("setting up PRESET COMFORT")
+            self._stove.set_stove_operation_mode(2)
+        else:
+            _LOGGER.info("setting up PRESET MANUAL")
+
+            if self._stove.is_stove_heating_times_on() == True:
+                self._stove.set_stove_operation_mode(1)
+            else:
+                self._stove.set_stove_operation_mode(0)
         self.schedule_update_ha_state()
 
     @property
