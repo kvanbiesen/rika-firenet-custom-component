@@ -68,7 +68,7 @@ class RikaFirenetStoveClimate(RikaFirenetEntity, ClimateEntity):
         if self._stove.get_stove_operation_mode() is 2:
             return PRESET_COMFORT
         else:
-            return PRESET_HOME      
+            return PRESET_HOME
 
     def set_preset_mode(self, preset_mode):
         """Set new preset mode."""
@@ -101,6 +101,11 @@ class RikaFirenetStoveClimate(RikaFirenetEntity, ClimateEntity):
     @property
     def hvac_modes(self):
         return HVAC_MODES
+
+    @property
+    def hvac_action(self):
+        """Return current operation ie. heat, cool, idle."""
+        return self._stove.get_status_text()
 
     def set_hvac_mode(self, hvac_mode):
         _LOGGER.info('set_hvac_mode()): ' + str(hvac_mode))
