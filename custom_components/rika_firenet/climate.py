@@ -7,7 +7,7 @@ from homeassistant.components.climate.const import (HVAC_MODE_AUTO,
                                                     SUPPORT_PRESET_MODE,
                                                     SUPPORT_TARGET_TEMPERATURE,
                                                     PRESET_COMFORT,
-                                                    PRESET_HOME
+                                                    PRESET_HOME,
                                                     CURRENT_HVAC_OFF,
                                                     CURRENT_HVAC_IDLE,
                                                     CURRENT_HVAC_HEAT)
