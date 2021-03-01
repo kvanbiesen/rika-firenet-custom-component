@@ -51,6 +51,8 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
     def min_value(self) -> float:
         if self._number == "room power request":
             return 1
+        elif self._number == "heating power":
+            return 30
         elif self._number == "convection fan1 level":
             return 0
         elif self._number == "convection fan1 area":
@@ -66,6 +68,8 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
     def max_value(self) -> float:
         if self._number == "room power request":
             return 4
+        elif self._number == "heating power":
+            return 100
         elif self._number == "convection fan1 level":
             return 5
         elif self._number == "convection fan1 area":
@@ -81,6 +85,8 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
     def step(self) -> float:
         if self._number == "room power request":
             return 1
+        elif self._number == "heating power":
+            return 5        
         elif self._number == "convection fan1 level":
             return 1
         elif self._number == "convection fan1 area":
