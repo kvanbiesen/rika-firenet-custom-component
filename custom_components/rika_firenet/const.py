@@ -1,5 +1,5 @@
 from homeassistant.components.climate.const import (PRESET_COMFORT,
-                                                    PRESET_HOME)
+                                                    PRESET_NONE)
 
 # Configuration
 CONF_ENABLED = "enabled"
@@ -17,8 +17,8 @@ NUMBER = "number"
 PLATFORMS = [CLIMATE, SENSOR, SWITCH, NUMBER]
 
 # Types
-PRESET_HOME = "Manual" # value forced
-SUPPORT_PRESET = [PRESET_HOME, PRESET_COMFORT]
+
+SUPPORT_PRESET = [PRESET_NONE, PRESET_COMFORT]
 
 VERSION = "0.0.1"
 DOMAIN = "rika_firenet"
