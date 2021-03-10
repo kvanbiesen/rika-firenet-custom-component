@@ -7,7 +7,7 @@ from homeassistant.components.climate.const import (HVAC_MODE_AUTO,
                                                     SUPPORT_PRESET_MODE,
                                                     SUPPORT_TARGET_TEMPERATURE,
                                                     PRESET_COMFORT,
-                                                    PRESET_HOME,
+                                                    PRESET_NONE,
                                                     CURRENT_HVAC_OFF,
                                                     CURRENT_HVAC_IDLE,
                                                     CURRENT_HVAC_HEAT)
@@ -71,7 +71,7 @@ class RikaFirenetStoveClimate(RikaFirenetEntity, ClimateEntity):
         if self._stove.get_stove_operation_mode() is 2:
             return PRESET_COMFORT
         else:
-            return PRESET_HOME
+            return PRESET_NONE
 
     def set_preset_mode(self, preset_mode):
         """Set new preset mode."""
@@ -80,7 +80,7 @@ class RikaFirenetStoveClimate(RikaFirenetEntity, ClimateEntity):
             _LOGGER.info("setting up PRESET COMFORT")
             self._stove.set_stove_operation_mode(2)
         else:
-            _LOGGER.info("setting up PRESET MANUAL")
+            _LOGGER.info("setting up PRESET NONE")
 
             if self._stove.is_stove_heating_times_on() == True:
                 self._stove.set_stove_operation_mode(1)
