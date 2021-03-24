@@ -15,13 +15,8 @@ DEVICE_SENSORS = [
     "stove consumption",
     "stove runtime",
     "stove temperature",
-    "stove thermostat",
     "stove burning",
     "stove status",
-    "room temperature",
-    "room thermostat",
-    "room power request",
-    "heating power",
     "pellets before service",
     "fan velocity",
     "diag motor"
@@ -61,20 +56,10 @@ class RikaFirenetStoveSensor(RikaFirenetEntity):
             return self._stove.get_stove_runtime()
         elif self._sensor == "stove temperature":
             return self._stove.get_stove_temperature()
-        elif self._sensor == "stove thermostat":
-            return self._stove.get_stove_thermostat()
         elif self._sensor == "stove burning":
             return self._stove.is_stove_burning()
         elif self._sensor == "stove status":
             return self._stove.get_status_text()
-        elif self._sensor == "room temperature":
-            return self._stove.get_room_temperature()
-        elif self._sensor == "room thermostat":
-            return self._stove.get_room_thermostat()
-        elif self._sensor == "room power request":
-            return self._stove.get_room_power_request()
-        elif self._sensor == "heating power":
-            return self._stove.get_heating_power()
         elif self._sensor == "pellets before service":
             return self._stove.get_pellets_before_service()
         elif self._sensor == "diag motor":
@@ -94,8 +79,7 @@ class RikaFirenetStoveSensor(RikaFirenetEntity):
             return MASS_KILOGRAMS
         elif self._sensor == "stove runtime":
             return TIME_HOURS
-        elif self._sensor == "heating power":
-            return PERCENTAGE
+
 
     @property
     def icon(self):
@@ -109,5 +93,5 @@ class RikaFirenetStoveSensor(RikaFirenetEntity):
             return "mdi:fire"
         elif self._sensor == "stove status":
             return "mdi:information-outline"
-        elif self._sensor == "heating power" or self._sensor == "diag motor" or self._sensor == "fan velocity":
+        elif self._sensor == "diag motor" or self._sensor == "fan velocity":
             return "mdi:speedometer"
