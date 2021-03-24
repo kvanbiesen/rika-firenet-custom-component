@@ -1,6 +1,6 @@
 import logging
 
-from homeassistant.const import PERCENTAGE
+from homeassistant.const import PERCENTAGE, TEMP_CELSIUS
 from .entity import RikaFirenetEntity
 from homeassistant.components.number import NumberEntity
 
