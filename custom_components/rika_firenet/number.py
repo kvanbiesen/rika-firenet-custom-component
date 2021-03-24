@@ -18,7 +18,9 @@ DEVICE_NUMBERS = [
     "convection fan1 level",
     "convection fan1 area",
     "convection fan2 level",
-    "convection fan2 area"
+    "convection fan2 area",
+    "temperature offset",
+    "set back temperature"
 ]
 
 
@@ -61,7 +63,10 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
             return 0
         elif self._number == "convection fan2 area":
             return -30
-
+        elif self._number == "set back temperature":
+            return 12
+        elif self._number == "temperature offset":
+            return -5    
         return 0
 
     @property
@@ -78,6 +83,10 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
             return 5
         elif self._number == "convection fan2 area":
             return 30
+        elif self._number == "set back temperature":
+            return 20
+        elif self._number == "temperature offset":
+            return 5    
 
         return 100
 
@@ -95,6 +104,10 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
             return 1
         elif self._number == "convection fan2 area":
             return 1
+        elif self._number == "set back temperature":
+            return 1
+        elif self._number == "temperature offset":
+            return 0.1
 
         return 10
 
@@ -112,6 +125,10 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
             return self._stove.get_convection_fan2_level()
         elif self._number == "convection fan2 area":
             return self._stove.get_convection_fan2_area()
+        elif self._number == "set back temperature":
+            return self._stove.get_stove_set_back_temperature()
+        elif self._number == "temperature offset":
+            return self._stove.get_temperatureOffset
 
     @property
     def unit_of_measurement(self):
@@ -121,9 +138,15 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
             return PERCENTAGE
         elif self._number == "convection fan2 area":
             return PERCENTAGE
+        elif self._number == "set back temperature":
+            return TEMP_CELSIUS
+        elif self._number == "temperature offset":
+            return TEMP_CELSIUS
 
     @property
     def icon(self):
+        if "temperature" in self._number:
+            return "mdi:thermometer"
         return "mdi:speedometer"
 
     def set_value(self, value: float) -> None:
@@ -141,5 +164,9 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
             return self._stove.set_convection_fan2_level(int(value))
         elif self._number == "convection fan2 area":
             return self._stove.set_convection_fan2_area(int(value))
+        elif self._number == "set back temperature":
+            return self._stove.set_stove_set_back_temperature
+        elif self._number == "temperature offset":
+            return self._stove.set_temperatureOffset
 
         self.schedule_update_ha_state()
