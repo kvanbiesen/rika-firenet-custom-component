@@ -165,8 +165,8 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
         elif self._number == "convection fan2 area":
             return self._stove.set_convection_fan2_area(int(value))
         elif self._number == "set back temperature":
-            return self._stove.set_stove_set_back_temperature
+            return self._stove.set_stove_set_back_temperature(int(value))
         elif self._number == "temperature offset":
-            return self._stove.set_temperatureOffset
+            return self._stove.set_temperatureOffset(float(value))
 
         self.schedule_update_ha_state()
