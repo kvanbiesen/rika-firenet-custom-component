@@ -128,7 +128,7 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
         elif self._number == "set back temperature":
             return self._stove.get_stove_set_back_temperature()
         elif self._number == "temperature offset":
-            return self._stove.get_temperatureOffset
+            return self._stove.get_temperatureOffset()
 
     @property
     def unit_of_measurement(self):
