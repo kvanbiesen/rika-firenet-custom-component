@@ -173,7 +173,7 @@ class RikaFirenetStove:
         while data == None:
             time.sleep(2)
             data = self.get_control_state()
-        data['temperatureOffset'] = temperature
+        data['temperatureOffset'] = str(temperature)
         self._coordinator.set_stove_controls(self._id, data)
 
 
