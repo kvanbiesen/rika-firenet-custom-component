@@ -21,8 +21,6 @@ _LOGGER = logging.getLogger(__name__)
 
 SUPPORT_FLAGS = SUPPORT_TARGET_TEMPERATURE | SUPPORT_PRESET_MODE
 
-PRESET_HOME = "Manual" # value forced
-
 MIN_TEMP = 16
 MAX_TEMP = 30
 
