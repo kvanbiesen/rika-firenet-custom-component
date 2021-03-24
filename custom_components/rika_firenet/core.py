@@ -165,7 +165,7 @@ class RikaFirenetStove:
         return float(self._state['sensors']['inputRoomTemperature'])  
 
     def get_temperatureOffset(self):
-        return float(self._state['controls']['temperatureOffset'])  
+        return self._state['controls']['temperatureOffset']
 
     def set_temperatureOffset(self, temperature):
         _LOGGER.info("set_offset_temperature(): " + str(temperature))
