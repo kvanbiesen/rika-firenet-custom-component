@@ -2,6 +2,7 @@ import logging
 import time
 from datetime import datetime, timedelta
 
+
 import requests
 from bs4 import BeautifulSoup
 from homeassistant.components.climate.const import (HVAC_MODE_AUTO,
@@ -83,7 +84,7 @@ class RikaFirenetCoordinator(DataUpdateCoordinator):
         self.connect()
         url = 'https://www.rika-firenet.com/api/client/' + id + '/status?nocache=' + str(int(time.time()))
         data = self._client.get(url).json()
-        # _LOGGER.debug('get_stove_state(), url=' + url + ', response=' + str(data))
+        _LOGGER.debug('get_stove_state(), url=' + url + ', response=' + str(data))
 
         return data
 
@@ -120,11 +121,11 @@ class RikaFirenetCoordinator(DataUpdateCoordinator):
         for counter in range(0, 10):
             if ('OK' in r.text) == True:
                 _LOGGER.info('Stove controls updated')
+                self.get_stove_state(id)
                 return True
             else:
                 _LOGGER.info('In progress.. ({}/10)'.format(counter))
                 time.sleep(2)
-
         return False
 
 
@@ -154,12 +155,14 @@ class RikaFirenetStove:
 
     def set_stove_temperature(self, temperature):
         _LOGGER.info("set_stove_temperature(): " + str(temperature))
-
         data = self.get_control_state()
+        while data == None:
+            time.sleep(2)
+            data = self.get_control_state()
         data['targetTemperature'] = str(temperature)
 
         self._coordinator.set_stove_controls(self._id, data)
-        self.sync_state()
+
 
     def get_control_state(self):
         return self._state['controls']
@@ -200,12 +203,13 @@ class RikaFirenetStove:
 
     def set_stove_operation_mode(self, mode):
         _LOGGER.info("set_stove_operation_mode(): " + str(mode))
-
         data = self.get_control_state()
+        while data == None:
+            time.sleep(2)
+            data = self.get_control_state()
         data['operatingMode'] = mode
-
         self._coordinator.set_stove_controls(self._id, data)
-        self.sync_state()
+
 
     def get_stove_set_back_temperature(self):
         return float(self._state['controls']['setBackTemperature'])
@@ -227,16 +231,16 @@ class RikaFirenetStove:
 
     def get_room_temperature(self):
         return float(self._state['sensors']['inputRoomTemperature'])  
-      
+
     def get_diag_motor(self):
         return self._state['sensors']['outputDischargeMotor']
-      
+
     def get_fan_velocity(self):
         return self._state['sensors']['outputIDFan']
-      
+
     def get_pellets_before_service(self):
         return self._state['sensors']['parameterFeedRateService']
-            
+
     def get_room_power_request(self):
         return int(self._state['controls']['RoomPowerRequest'])
 
@@ -254,60 +258,65 @@ class RikaFirenetStove:
 
     def set_room_power_request(self, power):
         _LOGGER.info("set_room_power_request(): " + str(power))
-
         data = self.get_control_state()
+        while data == None:
+            time.sleep(2)
+            data = self.get_control_state()
         data['RoomPowerRequest'] = power
-
         self._coordinator.set_stove_controls(self._id, data)
-        self.sync_state()
 
     def get_heating_power(self):
         return int(self._state['controls']['heatingPower'])
 
     def set_heating_power(self, power):
         _LOGGER.info("set_heating_power(): " + str(power))
-
         data = self.get_control_state()
+        while data == None:
+            time.sleep(2)
+            data = self.get_control_state()
         data['heatingPower'] = power
-
         self._coordinator.set_stove_controls(self._id, data)
-        self.sync_state()
+
 
     def set_convection_fan1_level(self, level):
         _LOGGER.info("set_convection_fan1_level(): " + str(level))
-
         data = self.get_control_state()
+        while data == None:
+            time.sleep(2)
+            data = self.get_control_state()
         data['convectionFan1Level'] = level
-
         self._coordinator.set_stove_controls(self._id, data)
-        self.sync_state()
+
 
     def set_convection_fan1_area(self, area):
         _LOGGER.info("set_convection_fan1_area(): " + str(area))
-
         data = self.get_control_state()
+        while data == None:
+            time.sleep(2)
+            data = self.get_control_state()
         data['convectionFan1Area'] = area
-
         self._coordinator.set_stove_controls(self._id, data)
-        self.sync_state()
+
 
     def set_convection_fan2_level(self, level):
         _LOGGER.info("set_convection_fan2_level(): " + str(level))
-
         data = self.get_control_state()
+        while data == None:
+            time.sleep(2)
+            data = self.get_control_state()
         data['convectionFan2Level'] = level
-
         self._coordinator.set_stove_controls(self._id, data)
-        self.sync_state()
+
 
     def set_convection_fan2_area(self, area):
         _LOGGER.info("set_convection_fan2_area(): " + str(area))
-
         data = self.get_control_state()
+        while data == None:
+            time.sleep(2)
+            data = self.get_control_state()
         data['convectionFan2Area'] = area
-
         self._coordinator.set_stove_controls(self._id, data)
-        self.sync_state()
+
 
     def is_stove_burning(self):
         if self._state['sensors']['statusMainState'] == 4 or self._state['sensors']['statusMainState'] == 5:
@@ -343,13 +352,14 @@ class RikaFirenetStove:
             
     def set_heating_times_active_for_comfort(self, active):
         _LOGGER.info("set_heating_times_active_for_comfort(): " + str(active))
-
         data = self.get_control_state()
+        while data == None:
+            time.sleep(2)
+            data = self.get_control_state()
         data['onOff'] = True
         data['heatingTimesActiveForComfort'] = active
-
         self._coordinator.set_stove_controls(self._id, data)
-        self.sync_state()
+
         
     def is_stove_heating_times_on(self):
         if self.get_stove_operation_mode() is 2:
@@ -365,22 +375,27 @@ class RikaFirenetStove:
 
     def turn_heating_times_on(self): 
         data = self.get_control_state()
+        while data == None:
+            time.sleep(2)
+            data = self.get_control_state()
         data['onOff'] = True
         data['heatingTimesActiveForComfort'] = True        
         if not self.get_stove_operation_mode() is 2:
             data['operatingMode'] = int(1)
         self._coordinator.set_stove_controls(self._id, data)
-        self.sync_state()
+
 
     
     def turn_heating_times_off(self):
         data = self.get_control_state()
+        while data == None:
+            time.sleep(2)
+            data = self.get_control_state()
         data['onOff'] = True
         data['heatingTimesActiveForComfort'] = False
         if not self.get_stove_operation_mode() is 2:
             data['operatingMode'] = int(0)
         self._coordinator.set_stove_controls(self._id, data)
-        self.sync_state()  
 
     def turn_convection_fan1_on(self):
         self.turn_convection_fan1_on_off(True)
@@ -390,12 +405,13 @@ class RikaFirenetStove:
 
     def turn_convection_fan1_on_off(self, on_off=True):
         _LOGGER.info("turn_convection_fan1_on_off(): ")
-
         data = self.get_control_state()
+        while data == None:
+            time.sleep(2)
+            data = self.get_control_state()
         data['convectionFan1Active'] = on_off
-
         self._coordinator.set_stove_controls(self._id, data)
-        self.sync_state()
+
 
     def turn_convection_fan2_on(self):
         self.turn_convection_fan2_on_off(True)
@@ -405,12 +421,13 @@ class RikaFirenetStove:
 
     def turn_convection_fan2_on_off(self, on_off=True):
         _LOGGER.info("turn_convection_fan2_on_off(): ")
-
         data = self.get_control_state()
+        while data == None:
+            time.sleep(2)
+            data = self.get_control_state()
         data['convectionFan2Active'] = on_off
-
         self._coordinator.set_stove_controls(self._id, data)
-        self.sync_state()
+
 
     def turn_on(self):
         self.turn_on_off(True)
@@ -420,17 +437,27 @@ class RikaFirenetStove:
 
     def turn_on_off(self, on_off=True):
         _LOGGER.info("turn_off(): ")
-
         data = self.get_control_state()
+        while data == None:
+            data = self.get_control_state()
         data['onOff'] = on_off
-
         self._coordinator.set_stove_controls(self._id, data)
-        self.sync_state()
+
 
     def get_status(self):
         main_state = self._state['sensors']['statusMainState']
         sub_state = self._state['sensors']['statusSubState']
         frost_started = self._state['sensors']['statusFrostStarted']
+        statusError = self._state['sensors']['statusError']
+        statusSubError = self._state['sensors']['statusSubError']
+
+# DEBUG for errors
+        if statusError == 1:
+            if statusSubError == 1:
+                return ["/", "Error 1"]
+            elif statusSubError == 2:
+                return ["/", "empty_tank"]
+            return ["/", "statusSubError" + str(statusSubError)]
 
         if frost_started:
             return ["/images/status/Visu_Freeze.svg", "frost_protection"]
