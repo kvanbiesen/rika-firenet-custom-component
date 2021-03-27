@@ -15,7 +15,8 @@ DEVICE_SENSORS = [
     "stove consumption",
     "stove runtime",
     "stove temperature",
-    "stove burning",
+    "room temperature",
+    "stove thermostat",
     "stove status",
     "pellets before service",
     "fan velocity",
@@ -56,6 +57,10 @@ class RikaFirenetStoveSensor(RikaFirenetEntity):
             return self._stove.get_stove_runtime()
         elif self._sensor == "stove temperature":
             return self._stove.get_stove_temperature()
+        elif self._sensor == "room temperature":
+            return self._stove.get_room_temperature()
+        elif self._sensor == "stove thermostat":
+            return self._stove.get_room_thermostat()
         elif self._sensor == "stove burning":
             return self._stove.is_stove_burning()
         elif self._sensor == "stove status":
