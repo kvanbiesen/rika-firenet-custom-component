@@ -17,6 +17,7 @@ DEVICE_SENSORS = [
     "stove temperature",
     "room temperature",
     "stove thermostat",
+    "stove burning",
     "stove status",
     "pellets before service",
     "fan velocity",
