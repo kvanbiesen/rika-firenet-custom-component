@@ -294,7 +294,7 @@ class RikaFirenetStove:
         data = self.get_control_state()
 
         data['onOff'] = True
-        data['heatingTimesActiveForComfort'] = True        
+        data['heatingTimesActiveForComfort'] = True
         if not self.get_stove_operation_mode() is 2:
             data['operatingMode'] = int(1)
         self._coordinator.set_stove_controls(self._id, data)
@@ -470,7 +470,7 @@ class RikaFirenetStove:
         lastSeenMinutes = self._state['lastSeenMinutes']
 # DEBUG for errors
         if lastSeenMinutes > 0:
-            return ["/", "OffLine"]
+            return ["/", "offline"]
         if statusError == 1:
             if statusSubError == 1:
                 return ["/", "Error 1"]
