@@ -108,6 +108,8 @@ class RikaFirenetStoveClimate(RikaFirenetEntity, ClimateEntity):
         """Return current operation ie. heat, cool, idle."""
         if self._stove.get_status_text() == "stove_off":
             return CURRENT_HVAC_OFF
+        elif self._stove.get_status_text() == "offline":
+            return CURRENT_HVAC_OFF
         elif self._stove.get_status_text() == "standby":
             return CURRENT_HVAC_IDLE
         else:
