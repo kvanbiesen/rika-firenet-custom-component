@@ -66,7 +66,7 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
         elif self._number == "set back temperature":
             return 12
         elif self._number == "temperature offset":
-            return -5    
+            return -4    
         return 0
 
     @property
@@ -86,7 +86,7 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
         elif self._number == "set back temperature":
             return 20
         elif self._number == "temperature offset":
-            return 5    
+            return 4    
 
         return 100
 
