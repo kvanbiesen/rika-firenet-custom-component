@@ -25,7 +25,7 @@ DOMAIN = "rika_firenet"
 
 UNIQUE_ID = "unique_id"
 
-DEFAULT_NAME = "Rika"
+DEFAULT_NAME = "RIKA"
 NAME = "Rika Firenet"
 
 UPDATE_LISTENER = "update_listener"
