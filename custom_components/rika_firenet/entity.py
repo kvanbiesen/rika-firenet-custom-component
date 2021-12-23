@@ -34,7 +34,7 @@ class RikaFirenetEntity(CoordinatorEntity):
     @property
     def device_info(self):
         return {
-            "identifiers": {(DOMAIN, self.self._u_id)},
+            "identifiers": {(DOMAIN, self._u_id)},
             "name": NAME,
             "model": VERSION,
             "manufacturer": DEFAULT_NAME,
