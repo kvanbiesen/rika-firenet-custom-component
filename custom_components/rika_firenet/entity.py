@@ -13,7 +13,7 @@ class RikaFirenetEntity(CoordinatorEntity):
 
         self._config_entry = config_entry
         self._stove = stove
-
+        self._u_id = stove.get_id()
         if suffix is not None:
             self._name = f"{stove.get_name()} {suffix}"
             self._unique_id = f"{suffix} {stove.get_name()}"
@@ -34,7 +34,7 @@ class RikaFirenetEntity(CoordinatorEntity):
     @property
     def device_info(self):
         return {
-            "identifiers": {(DOMAIN, self.unique_id)},
+            "identifiers": {(DOMAIN, self.self._u_id)},
             "name": NAME,
             "model": VERSION,
             "manufacturer": DEFAULT_NAME,
