@@ -1,7 +1,7 @@
 {
   "domain": "rika_firenet",
   "name": "Rika Firenet",
-  "documentation": "",
+  "documentation": "Rika Firenet Integration",
   "version": "0.0.2",
   "dependencies": [],
   "codeowners": [],
