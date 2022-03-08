@@ -83,7 +83,7 @@ class RikaFirenetCoordinator(DataUpdateCoordinator):
         self.connect()
         url = 'https://www.rika-firenet.com/api/client/' + id + '/status?nocache=' + str(int(time.time()))
         data = self._client.get(url).json()
-        #_LOGGER.debug('get_stove_state(), url=' + url + ', response=' + str(data))
+        _LOGGER.debug('get_stove_state(), url=' + url + ', response=' + str(data))
 
         return data
 
@@ -108,16 +108,13 @@ class RikaFirenetCoordinator(DataUpdateCoordinator):
         return stoves
 
     def update(self):
-        #_LOGGER.info("update()")
+        _LOGGER.debug("update()")
         for stove in self._stoves:
             stove.sync_state()
 
 
     def set_stove_controls(self, id, data):
-        #_LOGGER.info("set_stove_control() id: " + id + " data: " + str(data))
-    #    data['revision'] = str(int(time.time()))
-    #    r = self._client.post('https://www.rika-firenet.com/api/client/' + id + '/controls', data)
-
+        _LOGGER.debug("set_stove_control() id: " + id + " data: " + str(data))
         for counter in range(0, 10):
             r = self._client.post('https://www.rika-firenet.com/api/client/' + id + '/controls', data)            
      
@@ -159,7 +156,7 @@ class RikaFirenetStove:
         return 'Stove(id=' + self._id + ', name=' + self._name + ')'
 
     def sync_state(self):
-        #_LOGGER.debug("Updating stove %s", self._id)
+        _LOGGER.debug("Updating stove %s", self._id)
         self._state = self._coordinator.get_stove_state(self._id)
 
     def get_control_state(self):
@@ -177,7 +174,7 @@ class RikaFirenetStove:
         return float(self._state['controls']['temperatureOffset'])
 
     def set_temperatureOffset(self, temperature):
-        _LOGGER.info("set_offset_temperature(): " + str(temperature))
+        _LOGGER.debug("set_offset_temperature(): " + str(temperature))
       
         data = self.get_control_state()
 
@@ -189,7 +186,7 @@ class RikaFirenetStove:
         return float(self._state['controls']['targetTemperature'])
 
     def set_stove_temperature(self, temperature):
-        #_LOGGER.info("set_stove_temperature(): " + str(temperature))
+        _LOGGER.debug("set_stove_temperature(): " + str(temperature))
       
         data = self.get_control_state()
 
@@ -203,7 +200,7 @@ class RikaFirenetStove:
         return float(self._state['controls']['setBackTemperature'])
 
     def set_stove_set_back_temperature(self, temperature):
-        #_LOGGER.info("set_back_temperature(): " + str(temperature))
+        _LOGGER.debug("set_back_temperature(): " + str(temperature))
       
         data = self.get_control_state()
 
@@ -221,7 +218,7 @@ class RikaFirenetStove:
         self.turn_on_off(False)
 
     def turn_on_off(self, on_off=True):
-        _LOGGER.info("turn_off(): ")
+        _LOGGER.debug("turn_off(): ")
       
         data = self.get_control_state()
         while data == None:
@@ -234,7 +231,7 @@ class RikaFirenetStove:
         return self._state['controls']['operatingMode']
 
     def set_stove_operation_mode(self, mode):
-        _LOGGER.info("set_stove_operation_mode(): " + str(mode))
+        _LOGGER.debug("set_stove_operation_mode(): " + str(mode))
       
         data = self.get_control_state()
 
@@ -256,10 +253,10 @@ class RikaFirenetStove:
         if hvac_mode == HVAC_MODE_OFF:
             self.turn_off()
         elif hvac_mode == HVAC_MODE_AUTO:
-            #_LOGGER.info("Turn heating times on")
+            _LOGGER.debug("Turn heating times on")
             self.turn_heating_times_on()
         elif hvac_mode == HVAC_MODE_HEAT:
-            #_LOGGER.info("Turn heating times off")
+            _LOGGER.debug("Turn heating times off")
             self.turn_heating_times_off()
 
 
@@ -279,7 +276,7 @@ class RikaFirenetStove:
         return self._state['controls']['heatingTimesActiveForComfort']
 
     def set_heating_times_active_for_comfort(self, active):
-        #_LOGGER.info("set_heating_times_active_for_comfort(): " + str(active))
+        _LOGGER.debug("set_heating_times_active_for_comfort(): " + str(active))
       
         data = self.get_control_state()
 
@@ -316,7 +313,7 @@ class RikaFirenetStove:
         return int(self._state['controls']['RoomPowerRequest'])
 
     def set_room_power_request(self, power):
-        #_LOGGER.info("set_room_power_request(): " + str(power))
+        _LOGGER.debug("set_room_power_request(): " + str(power))
       
         data = self.get_control_state()
 
@@ -330,7 +327,7 @@ class RikaFirenetStove:
         return int(self._state['controls']['heatingPower'])
 
     def set_heating_power(self, power):
-        #_LOGGER.info("set_heating_power(): " + str(power))
+        _LOGGER.debug("set_heating_power(): " + str(power))
       
         data = self.get_control_state()
 
@@ -350,7 +347,7 @@ class RikaFirenetStove:
         self.turn_convection_fan1_on_off(False)
 
     def turn_convection_fan1_on_off(self, on_off=True):
-        #_LOGGER.info("turn_convection_fan1_on_off(): ")
+        _LOGGER.debug("turn_convection_fan1_on_off(): ")
       
         data = self.get_control_state()
 
@@ -362,7 +359,7 @@ class RikaFirenetStove:
         return int(self._state['controls']['convectionFan1Level'])
 
     def set_convection_fan1_level(self, level):
-        #_LOGGER.info("set_convection_fan1_level(): " + str(level))
+        _LOGGER.debug("set_convection_fan1_level(): " + str(level))
       
         data = self.get_control_state()
 
@@ -374,7 +371,7 @@ class RikaFirenetStove:
         return int(self._state['controls']['convectionFan1Area'])
 
     def set_convection_fan1_area(self, area):
-        #_LOGGER.info("set_convection_fan1_area(): " + str(area))
+        _LOGGER.debug("set_convection_fan1_area(): " + str(area))
       
         data = self.get_control_state()
 
@@ -394,7 +391,7 @@ class RikaFirenetStove:
         self.turn_convection_fan2_on_off(False)
 
     def turn_convection_fan2_on_off(self, on_off=True):
-        #_LOGGER.info("turn_convection_fan2_on_off(): ")
+        _LOGGER.debug("turn_convection_fan2_on_off(): ")
       
         data = self.get_control_state()
 
@@ -406,7 +403,7 @@ class RikaFirenetStove:
         return int(self._state['controls']['convectionFan2Level'])
 
     def set_convection_fan2_level(self, level):
-        #_LOGGER.info("set_convection_fan2_level(): " + str(level))
+        _LOGGER.debug("set_convection_fan2_level(): " + str(level))
       
         data = self.get_control_state()
 
@@ -418,7 +415,7 @@ class RikaFirenetStove:
         return int(self._state['controls']['convectionFan2Area'])
 
     def set_convection_fan2_area(self, area):
-        #_LOGGER.info("set_convection_fan2_area(): " + str(area))
+        _LOGGER.debug("set_convection_fan2_area(): " + str(area))
       
         data = self.get_control_state()
 
@@ -468,6 +465,9 @@ class RikaFirenetStove:
         statusSubError = self._state['sensors']['statusSubError']
         lastSeenMinutes = self._state['lastSeenMinutes']
 # DEBUG for errors
+        _LOGGER.debug("lastSeenMinutes: " + str(lastSeenMinutes))
+        _LOGGER.debug("statusError: " + str(statusError))
+        _LOGGER.debug("statusSubError: " + str(statusSubError))
         if lastSeenMinutes > 0:
             return ["/", "offline"]
         if statusError == 1:
