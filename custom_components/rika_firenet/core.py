@@ -116,8 +116,7 @@ class RikaFirenetCoordinator(DataUpdateCoordinator):
     def set_stove_controls(self, id, data):
         _LOGGER.debug("set_stove_control() id: " + id + " data: " + str(data))
         for counter in range(0, 10):
-            r = self._client.post('https://www.rika-firenet.com/api/client/' + id + '/controls', data)            
-     
+            r = self._client.post('https://www.rika-firenet.com/api/client/' + id + '/controls', data)
             if ('OK' in r.text) == True:
                 _LOGGER.info('Stove controls updated')
                 return True
@@ -127,7 +126,6 @@ class RikaFirenetCoordinator(DataUpdateCoordinator):
                 data2 =  self.get_stove_state(id)
                 data['revision'] = str(data2['controls']['revision'])
                 _LOGGER.info('no send :' + str(data['revision']) + str(r.text))
-                return True
         return False
 
 
@@ -168,14 +166,14 @@ class RikaFirenetStove:
 
 
     def get_room_temperature(self):
-        return float(self._state['sensors']['inputRoomTemperature'])  
+        return float(self._state['sensors']['inputRoomTemperature'])
 
     def get_temperatureOffset(self):
         return float(self._state['controls']['temperatureOffset'])
 
     def set_temperatureOffset(self, temperature):
         _LOGGER.debug("set_offset_temperature(): " + str(temperature))
-      
+
         data = self.get_control_state()
 
         data['temperatureOffset'] = temperature

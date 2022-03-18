@@ -66,7 +66,7 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
         elif self._number == "set back temperature":
             return 12
         elif self._number == "temperature offset":
-            return -4    
+            return -4
         return 0
 
     @property
@@ -86,7 +86,7 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
         elif self._number == "set back temperature":
             return 20
         elif self._number == "temperature offset":
-            return 4    
+            return 4
 
         return 100
 
@@ -95,7 +95,7 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
         if self._number == "room power request":
             return 1
         elif self._number == "heating power":
-            return 5        
+            return 5
         elif self._number == "convection fan1 level":
             return 1
         elif self._number == "convection fan1 area":

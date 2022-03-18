@@ -71,11 +71,9 @@ class RikaFirenetStoveSensor(RikaFirenetEntity):
         elif self._sensor == "diag motor":
             return self._stove.get_diag_motor()
         elif self._sensor == "fan velocity":
-            return self._stove.get_fan_velocity()        
+            return self._stove.get_fan_velocity()
 
 
-    
-    
 
     @property
     def unit_of_measurement(self):

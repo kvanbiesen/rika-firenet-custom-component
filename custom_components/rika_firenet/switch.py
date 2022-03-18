@@ -54,7 +54,7 @@ class RikaFirenetStoveBinarySwitch(RikaFirenetEntity, SwitchEntity):
         elif self._number == "convection fan2":
             self._stove.turn_convection_fan2_on()
         elif self._number == "heating times":
-            self._stove.turn_heating_times_on()            
+            self._stove.turn_heating_times_on()
 
         self.schedule_update_ha_state()
 
@@ -68,7 +68,7 @@ class RikaFirenetStoveBinarySwitch(RikaFirenetEntity, SwitchEntity):
         elif self._number == "convection fan2":
             self._stove.turn_convection_fan2_off()
         elif self._number == "heating times":
-            self._stove.turn_heating_times_off()   
+            self._stove.turn_heating_times_off()
             
         self.schedule_update_ha_state()
 
@@ -85,4 +85,4 @@ class RikaFirenetStoveBinarySwitch(RikaFirenetEntity, SwitchEntity):
         elif self._number == "convection fan2":
             return self._stove.is_stove_convection_fan2_on()
         elif self._number == "heating times":
-            return self._stove.is_stove_heating_times_on()        
+            return self._stove.is_stove_heating_times_on()
