@@ -6,6 +6,7 @@ CONF_ENABLED = "enabled"
 CONF_USERNAME = "username"
 CONF_PASSWORD = "password"
 CONF_DEFAULT_TEMPERATURE = "defaultTemperature"
+CONF_DEFAULT_SCAN_INTERVAL  = "defaultScanInterval"
 DATA = "data"
 UPDATE_TRACK = "update_track"
 
@@ -20,7 +21,7 @@ PLATFORMS = [CLIMATE, SENSOR, SWITCH, NUMBER]
 
 SUPPORT_PRESET = [PRESET_NONE, PRESET_COMFORT]
 
-VERSION = "0.24.1"
+VERSION = "0.25.0"
 DOMAIN = "rika_firenet"
 
 UNIQUE_ID = "unique_id"

@@ -87,7 +87,6 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
             return 20
         elif self._number == "temperature offset":
             return 4
-
         return 100
 
     @property
@@ -108,7 +107,6 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
             return 1
         elif self._number == "temperature offset":
             return 0.1
-
         return 10
 
     @property
@@ -151,7 +149,6 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
 
     def set_value(self, value: float) -> None:
         _LOGGER.info("set_value " + self._number + " " + str(value))
-
         if self._number == "room power request":
             self._stove.set_room_power_request(int(value))
         elif self._number == "heating power":
@@ -168,5 +165,4 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
             return self._stove.set_stove_set_back_temperature(value)
         elif self._number == "temperature offset":
             return self._stove.set_temperatureOffset(value)
-
         self.schedule_update_ha_state()

@@ -45,9 +45,12 @@ async def async_setup_entry(hass, entry, async_add_entities):
 class RikaFirenetStoveClimate(RikaFirenetEntity, ClimateEntity):
 
     @property
+    def entity_picture(self):
+        return self._stove.get_status_picture()
+
+    @property
     def current_temperature(self):
         temp = self._stove.get_room_temperature()
-        _LOGGER.info('current_temperature(): ' + str(temp))
         return temp
 
     @property
@@ -73,13 +76,12 @@ class RikaFirenetStoveClimate(RikaFirenetEntity, ClimateEntity):
 
     def set_preset_mode(self, preset_mode):
         """Set new preset mode."""
-        _LOGGER.info('preset mode : ' + str(preset_mode))
+        _LOGGER.debug('preset mode : ' + str(preset_mode))
         if preset_mode == PRESET_COMFORT:
-            _LOGGER.info("setting up PRESET COMFORT")
+            _LOGGER.debug("setting up PRESET COMFORT")
             self._stove.set_stove_operation_mode(2)
         else:
-            _LOGGER.info("setting up PRESET NONE")
-
+            _LOGGER.debug("setting up PRESET NONE")
             if self._stove.is_stove_heating_times_on() == True:
                 self._stove.set_stove_operation_mode(1)
             else:
@@ -116,7 +118,7 @@ class RikaFirenetStoveClimate(RikaFirenetEntity, ClimateEntity):
             return CURRENT_HVAC_HEAT
 
     def set_hvac_mode(self, hvac_mode):
-        _LOGGER.info('set_hvac_mode()): ' + str(hvac_mode))
+        _LOGGER.debug('set_hvac_mode()): ' + str(hvac_mode))
         self._stove.set_hvac_mode(str(hvac_mode))
         self.schedule_update_ha_state()
 
@@ -130,14 +132,11 @@ class RikaFirenetStoveClimate(RikaFirenetEntity, ClimateEntity):
 
     def set_temperature(self, **kwargs):
         temperature = int(kwargs.get(ATTR_TEMPERATURE))
-        _LOGGER.info('set_temperature(): ' + str(temperature))
-
+        _LOGGER.debug('set_temperature(): ' + str(temperature))
         if kwargs.get(ATTR_TEMPERATURE) is None:
             return
-
         if not self._stove.is_stove_on():
             return
-
         # do nothing if HVAC is switched off
         self._stove.set_stove_temperature(temperature)
         self.schedule_update_ha_state()

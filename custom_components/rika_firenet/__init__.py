@@ -6,7 +6,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 
-from .const import (CONF_DEFAULT_TEMPERATURE, CONF_PASSWORD,
+from .const import (CONF_DEFAULT_TEMPERATURE, CONF_DEFAULT_SCAN_INTERVAL, CONF_PASSWORD,
                     CONF_USERNAME, DOMAIN, PLATFORMS, STARTUP_MESSAGE)
 from .core import RikaFirenetCoordinator
 
@@ -28,8 +28,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     username = entry.data.get(CONF_USERNAME)
     password = entry.data.get(CONF_PASSWORD)
     default_temperature = int(entry.options.get(CONF_DEFAULT_TEMPERATURE, 21))
+    default_scan_interval = int(entry.options.get(CONF_DEFAULT_SCAN_INTERVAL, 15))
 
-    coordinator = RikaFirenetCoordinator(hass, username, password, default_temperature)
+    coordinator = RikaFirenetCoordinator(hass, username, password, default_temperature, default_scan_interval)
 
     try:
         await hass.async_add_executor_job(coordinator.setup)
@@ -46,23 +47,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             _LOGGER.error("Failed to login to rika firenet: %s", ex)
             return False
         raise ConfigEntryNotReady from ex
-
     await coordinator.async_refresh()
-
     if not coordinator.last_update_success:
         raise ConfigEntryNotReady
-
     hass.data[DOMAIN][entry.entry_id] = coordinator
-
     for platform in PLATFORMS:
         if entry.options.get(platform, True):
             coordinator.platforms.append(platform)
             hass.async_add_job(
                 hass.config_entries.async_forward_entry_setup(entry, platform)
             )
-
     entry.add_update_listener(async_reload_entry)
-
     return True
 
 
@@ -80,7 +75,6 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
     )
     if unloaded:
         hass.data[DOMAIN].pop(entry.entry_id)
-
     return unloaded
 
 
@@ -88,3 +82,7 @@ async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Reload config entry."""
     await async_unload_entry(hass, entry)
     await async_setup_entry(hass, entry)
+
+async def _async_options_updated(hass: HomeAssistant, entry: ConfigEntry):
+    """Handle options update."""
+    await async_reload(hass, entry)

@@ -2,7 +2,7 @@ import logging
 
 from homeassistant.const import TEMP_CELSIUS, TIME_HOURS, MASS_KILOGRAMS, PERCENTAGE
 from .entity import RikaFirenetEntity
-
+from homeassistant.helpers.entity import EntityCategory
 from .const import (
     DOMAIN
 )
@@ -21,7 +21,8 @@ DEVICE_SENSORS = [
     "stove status",
     "pellets before service",
     "fan velocity",
-    "diag motor"
+    "diag motor",
+    "number fail"
 ]
 
 
@@ -47,7 +48,6 @@ async def async_setup_entry(hass, entry, async_add_entities):
 class RikaFirenetStoveSensor(RikaFirenetEntity):
     def __init__(self, config_entry, stove: RikaFirenetStove, coordinator: RikaFirenetCoordinator, sensor):
         super().__init__(config_entry, stove, coordinator, sensor)
-
         self._sensor = sensor
 
     @property
@@ -72,7 +72,8 @@ class RikaFirenetStoveSensor(RikaFirenetEntity):
             return self._stove.get_diag_motor()
         elif self._sensor == "fan velocity":
             return self._stove.get_fan_velocity()
-
+        elif self._sensor == "number fail":
+            return self._stove.get_number_fail()
 
 
     @property
@@ -92,10 +93,30 @@ class RikaFirenetStoveSensor(RikaFirenetEntity):
         elif self._sensor == "stove consumption" or self._sensor == "pellets before service":
             return "mdi:weight-kilogram"
         elif self._sensor == "stove runtime":
-            return "mdi:timelapse"
+            return "mdi:timer-outline"
         elif self._sensor == "stove burning":
             return "mdi:fire"
-        elif self._sensor == "stove status":
+        elif self._sensor == "stove status"or self._sensor == "number fail":
             return "mdi:information-outline"
         elif self._sensor == "diag motor" or self._sensor == "fan velocity":
             return "mdi:speedometer"
+
+
+    @property
+    def entity_category(self):
+        if self._sensor == "stove consumption":
+            return EntityCategory.DIAGNOSTIC
+        elif self._sensor == "stove runtime":
+            return EntityCategory.DIAGNOSTIC
+        elif self._sensor == "stove temperature":
+            return EntityCategory.DIAGNOSTIC
+        elif self._sensor == "stove burning":
+            return EntityCategory.DIAGNOSTIC
+        elif self._sensor == "pellets before service":
+            return EntityCategory.DIAGNOSTIC
+        elif self._sensor == "diag motor":
+            return EntityCategory.DIAGNOSTIC 
+        elif self._sensor == "fan velocity":
+            return EntityCategory.DIAGNOSTIC 
+        elif self._sensor == "number fail":
+            return EntityCategory.DIAGNOSTIC 

@@ -23,6 +23,7 @@
       "user": {
         "data": {
           "defaultTemperature": "Default temperature",
+          "defaultScanInterval": "Default scan interval (15 seconds)",
           "climate": "Climate enabled",
           "sensor": "Sensor enabled",
           "switch": "Switch enabled",

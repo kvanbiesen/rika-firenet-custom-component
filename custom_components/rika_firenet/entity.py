@@ -10,7 +10,6 @@ _LOGGER = logging.getLogger(__name__)
 class RikaFirenetEntity(CoordinatorEntity):
     def __init__(self, config_entry, stove: RikaFirenetStove, coordinator: RikaFirenetCoordinator, suffix=None):
         super().__init__(coordinator)
-
         self._config_entry = config_entry
         self._stove = stove
         self._u_id = stove.get_id()
@@ -20,8 +19,7 @@ class RikaFirenetEntity(CoordinatorEntity):
         else:
             self._name = stove.get_name()
             self._unique_id = stove.get_id()
-
-        _LOGGER.info('RikaFirenetEntity creation with name: ' + self._name + ' unique_id: ' + self._unique_id)
+        _LOGGER.debug('RikaFirenetEntity creation with name: ' + self._name + ' unique_id: ' + self._unique_id)
 
     @property
     def unique_id(self):
