@@ -24,7 +24,7 @@ Platform | Description
 <!---->
 ***
 
-[rika_firenet]: https://github.com/Fockaert/rika-firenet-custom-component
-[commits]: https://github.com/Fockaert/rika-firenet-custom-component/commits/main
+[rika_firenet]: https://github.com/antibill51/rika-firenet-custom-component
+[commits]: https://github.com/antibill51/rika-firenet-custom-component/commits/main
 [forum]: https://community.home-assistant.io/
-[releases]: https://github.com/Fockaert/rika-firenet-custom-component/releases
+[releases]: https://github.com/antibill51/rika-firenet-custom-component/releases
