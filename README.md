@@ -1,4 +1,4 @@
-# Rika Firenet
+# Rika Firenet (forked from Fockaert/rika-firenet-custom-component)
 
 _Component to integrate with Rika Firenet [rikafirenet]._
 
@@ -9,15 +9,9 @@ Platform | Description
 `climate` | ...
 `sensor` | ...
 
-## Planning
-* Add readme example graphs possible
-* Get the config flow working with update and platform selections
-* Support preset mode (in comment atm)
-* Support smart target temperature. e.g. Show base temperature when active
-* Support Rika stove without external thermostat (only tested with external thermostat)
-* ... Open for more stuff ...
-
 ## Installation
+
+HACS or:
 
 1. Using the tool of choice open the directory (folder) for your HA configuration (where you find `configuration.yaml`).
 2. If you do not have a `custom_components` directory (folder) there, you need to create it.
@@ -29,7 +23,35 @@ Platform | Description
 
 ## Configuration is done in the UI
 
-Utility meters example:
+## Lovelace: 
+
+![alt text](https://raw.githubusercontent.com/antibill51/rika-firenet-custom-component/main/Screenshot/capture.png)
+
+### Cards :
+
+custom:config-template-card
+custom:stack-in-card
+custom:bar-card
+custom:mini-graph-card
+custom:simple-thermostat
+
+Pellet in stock, tank level.
+I use GSG2.0 for Pellet stock. https://domotique-home.fr/gestion-de-chauffage-stock-de-granules-gsg/
+
+### Informations: 
+
+I bypass Rika built'in thermostat with PID Thermostat.
+
+Examples in HA config folder. (lovelace / automations / ...)
+
+rika_domo: name of the stove from this component. Replace with your.
+climate.rika: PID thermostat using https://github.com/ScratMan/HASmartThermostat (fork in progress for state from input_boolean or power value).
+climate.rika_z2: PID thermostat.
+
+If I forgot elements, ask for it ;)
+
+
+## Utility meters example: (I don't use it)
 ```yaml
 utility_meter:
   hourly_stove_consumption:
@@ -65,6 +87,6 @@ If you want to contribute to this please read the [Contribution guidelines](CONT
 
 ***
 
-[rikafirenet]: https://github.com/fockaert/rika-firenet-custom-component
+[rikafirenet]: https://github.com/antibill51/rika-firenet-custom-component
 [forum]: https://community.home-assistant.io/
-[releases]: https://github.com/fockaert/rika-firenet-custom-component/releases
+[releases]: https://github.com/antibill51/rika-firenet-custom-component/releases

@@ -1,0 +1,202 @@
+climate:
+  - platform: smart_thermostat
+    name: RIKA
+    unique_id: rika
+    heater: input_number.rika_power
+    target_sensor: sensor.lywsd03mmc_salle_a_manger_temp
+    outdoor_sensor: sensor.dark_sky_apparent_temperature
+    min_temp: 7
+    max_temp: 28
+    ac_mode: False
+    keep_alive:
+      seconds: 30
+    kp: 38
+    ki: 0.005
+    kd: 110000
+    ke: 0.3
+    pwm: 0
+    min_cycle_duration: 01:00:00
+    min_off_cycle_duration: 00:10:00
+    sampling_period: 00:05:00
+    target_temp_step: 0.5
+    precision: 0.1
+    cold_tolerance: 0.5
+    hot_tolerance: 2
+    eco_temp: 19.5
+    boost_temp: 22
+    comfort_temp: 21
+    away_temp: 19
+    sleep_temp: 16
+    preset_sync_mode: "sync"
+    sensor_stall: 02:00:00
+    output_safety: 0
+
+  - platform: smart_thermostat
+    name: RIKA ZONE2
+    unique_id: rika_Z2
+    heater: input_number.rika_z2_power
+    target_sensor: sensor.lywsd03mmc_chambre_temp
+    outdoor_sensor: sensor.dark_sky_apparent_temperature
+    min_temp: 7
+    max_temp: 28
+    ac_mode: False
+    keep_alive:
+      seconds: 30
+    kp: 38
+    ki: 0.005
+    kd: 110000
+    ke: 0.3
+    pwm: 0
+    sampling_period: 00:05:00
+    target_temp_step: 0.5
+    precision: 0.1
+    cold_tolerance: 0.5
+    hot_tolerance: 2
+    eco_temp: 19
+    boost_temp: 21
+    comfort_temp: 19.5
+    away_temp: 18
+    preset_sync_mode: "sync"
+    sensor_stall: 02:00:00
+    output_safety: 0
+
+input_number:
+  rika_power:
+    name: Puissance RIKA
+    max: 100
+    min: 0
+    step: 0.1
+    unit_of_measurement: "%"
+
+  rika_z2_power:
+    name: Puissance RIKA Zone 2
+    max: 100
+    min: 0
+    step: 0.1
+    unit_of_measurement: "%"
+
+  rika_domo_hysteresis_min:
+    name: rika domo hysteresis min
+    max: 5
+    min: 0
+    step: 0.1
+    unit_of_measurement: "°C"
+
+  rika_domo_hysteresis_max:
+    name: rika domo hysteresis max
+    max: 5
+    min: 0
+    step: 0.1
+    unit_of_measurement: "°C"
+
+  rika_domo_hysteresis_max_gf:
+    name: rika domo hysteresis max grand froid
+    max: 5
+    min: 0
+    step: 0.1
+    unit_of_measurement: "°C"
+
+input_boolean:
+  poele_rika:
+    name: Poêle RIKA
+    icon: mdi:fire-circle
+
+  arret_force_rika:
+    name: Arrêt forcé Poêle RIKA
+    icon: mdi:stop-circle
+
+  retour_domicile:
+    name: Retour domicile
+    icon: mdi:home-circle
+
+  mode_nuit:
+    name: Mode nuit
+    icon: mdi:moon-waning-crescent
+
+  programmation_poele:
+    name: Programmation poêle
+    icon: mdi:timer
+
+  mode_confort_prolonge:
+    name: Confort prolongé
+    icon: mdi:fire-circle
+
+  mode_grand_froid:
+    name: Grand froid
+    icon: mdi:snowflake 
+
+sensor:
+  - platform: template
+    sensors:
+      stove_activity:
+        friendly_name: Stove activity
+        value_template: >
+                          {% if states.sensor.rika_domo_stove_burning.state == 'True' %}
+                            {{states.number.rika_domo_heating_power.state}}
+                          {%else %}
+                            {{0}}
+                          {% endif %}
+        unit_of_measurement: "%"
+
+      zone1_activity:
+        friendly_name: Zone 1 activity
+        value_template: >
+                          {% if states.climate.zone_1.attributes.hvac_action == 'heating' %}
+                            {{states.number.rika_domo_convection_fan1_level.state }}
+                          {%else %}
+                            {{0}}
+                          {% endif %}
+
+      zone2_activity:
+        friendly_name: Zone 2 activity
+        value_template: >
+                          {% if states.switch.rika_domo_convection_fan2.state == 'on' %}
+                            {{int(states.number.rika_domo_convection_fan2_level.state,0)*20}}
+                          {%else %}
+                            {{0}}
+                          {% endif %}
+        unit_of_measurement: "%"
+
+
+# For debug values
+      rika_z2_output:
+        friendly_name: PID Output
+        unit_of_measurement: "%"
+        value_template: "{{ state_attr('climate.rika_z2', 'control_output') | float }}"
+      rika_z2_p:
+        friendly_name: PID P
+        unit_of_measurement: "%"
+        value_template: "{{ state_attr('climate.rika_z2', 'pid_p') | float }}"
+      rika_z2_i:
+        friendly_name: PID I
+        unit_of_measurement: "%"
+        value_template: "{{ state_attr('climate.rika_z2', 'pid_i') | float }}"
+      rika_z2_d:
+        friendly_name: PID D
+        unit_of_measurement: "%"
+        value_template: "{{ state_attr('climate.rika_z2', 'pid_d') | float }}"
+      rika_z2_e:
+        friendly_name: PID E
+        unit_of_measurement: "%"
+        value_template: "{{ state_attr('climate.rika_z2', 'pid_e') | float }}"
+
+      rika_output:
+        friendly_name: PID Output
+        unit_of_measurement: "%"
+        value_template: "{{ state_attr('climate.rika', 'control_output') | float }}"
+      rika_p:
+        friendly_name: PID P
+        unit_of_measurement: "%"
+        value_template: "{{ state_attr('climate.rika', 'pid_p') | float }}"
+      rika_i:
+        friendly_name: PID I
+        unit_of_measurement: "%"
+        value_template: "{{ state_attr('climate.rika', 'pid_i') | float }}"
+      rika_d:
+        friendly_name: PID D
+        unit_of_measurement: "%"
+        value_template: "{{ state_attr('climate.rika', 'pid_d') | float }}"
+      rika_e:
+        friendly_name: PID E
+        unit_of_measurement: "%"
+        value_template: "{{ state_attr('climate.rika', 'pid_e') | float }}"

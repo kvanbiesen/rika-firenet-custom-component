@@ -1,0 +1,848 @@
+- id: "1636999589627"
+  alias: RIKA réservoir pellet 10kg présent
+  description: ""
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.reservoir_pellet
+      below: "10"
+    - platform: time_pattern
+      minutes: "30"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.reservoir_pellet
+      below: "10"
+    - condition: or
+      conditions:
+        - condition: zone
+          entity_id: person.remi
+          zone: zone.home
+        - condition: state
+          entity_id: person.audrey
+          state: home
+  action:
+    - service: input_text.set_value
+      target:
+        entity_id: input_text.broadcast_message
+      data:
+        value: le niveau de pellets dans le réservoir est bas
+  mode: single
+  max_exceeded: silent
+- id: "1638373340854"
+  alias: RIKA réservoir pellet 10kg absent
+  description: ""
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.reservoir_pellet
+      below: "10"
+    - platform: time_pattern
+      minutes: "30"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.reservoir_pellet
+      below: "10"
+    - condition: not
+      conditions:
+        - condition: and
+          conditions:
+            - condition: zone
+              entity_id: person.remi
+              zone: zone.home
+            - condition: state
+              entity_id: person.audrey
+              state: home
+  action:
+    - service: notify.huawei_lte
+      data:
+        message: Niveau critique du réservoir
+        title: Rika
+  mode: single
+  max_exceeded: silent
+- id: "1642328824341"
+  alias: RIKA zone2 on
+  description: ""
+  trigger:
+    - platform: numeric_state
+      entity_id: input_number.rika_z2_power
+      above: "4"
+    - platform: time_pattern
+      minutes: /1
+    - platform: state
+      entity_id: group.ouverture_exterieur
+      for:
+        hours: 0
+        minutes: 1
+        seconds: 0
+      to: "off"
+  condition:
+    - condition: template
+      value_template: "{{ states.climate.rika_domo.attributes.hvac_action == 'heating'}}"
+    - condition: state
+      entity_id: switch.rika_domo_convection_fan2
+      state: "off"
+    - condition: and
+      conditions:
+        - condition: numeric_state
+          entity_id: input_number.rika_z2_power
+          above: "4"
+        - condition: or
+          conditions:
+            - condition: state
+              entity_id: group.ouverture_exterieur
+              state: "off"
+              for:
+                hours: 0
+                minutes: 1
+                seconds: 0
+            - condition: state
+              entity_id: group.ouverture_exterieur
+              state: "on"
+              for:
+                hours: 1
+                minutes: 0
+                seconds: 0
+    - condition: state
+      entity_id: input_boolean.mode_vacance
+      state: "off"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id: switch.rika_domo_convection_fan2
+      data: {}
+  mode: single
+  max_exceeded: silent
+- id: "1642839077658"
+  alias: RIKA zone2 off
+  description: ""
+  trigger:
+    - platform: numeric_state
+      entity_id: input_number.rika_z2_power
+      below: "5"
+    - platform: time_pattern
+      minutes: /1
+    - platform: state
+      entity_id: group.ouverture_exterieur
+      to: "on"
+      for:
+        hours: 0
+        minutes: 1
+        seconds: 0
+  condition:
+    - condition: state
+      entity_id: switch.rika_domo_convection_fan2
+      state: "on"
+    - condition: or
+      conditions:
+        - condition: numeric_state
+          entity_id: input_number.rika_z2_power
+          below: "5"
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: group.ouverture_exterieur
+              state: "on"
+              for:
+                hours: 0
+                minutes: 1
+                seconds: 0
+            - condition: not
+              conditions:
+                - condition: state
+                  entity_id: group.ouverture_exterieur
+                  state: "on"
+                  for:
+                    hours: 1
+                    minutes: 0
+                    seconds: 0
+        - condition: state
+          entity_id: input_boolean.mode_vacance
+          state: "on"
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id: switch.rika_domo_convection_fan2
+      data: {}
+  mode: single
+  max_exceeded: silent
+- id: "1645105950704"
+  alias: RIKA Gestion température
+  description: ""
+  trigger:
+    - platform: time_pattern
+      minutes: /1
+    - platform: state
+      entity_id: climate.rika
+      attribute: temperature
+    - platform: state
+      entity_id: sensor.lywsd03mmc_salle_a_manger_temp
+    - platform: state
+      entity_id: input_boolean.arret_force_rika
+  condition:
+    - condition: and
+      conditions:
+        - condition: template
+          value_template:
+            "{% set temp_indoor = float(states('sensor.lywsd03mmc_salle_a_manger_temp'),0)\
+            \ %} {% set target_temp = float(states.climate.rika.attributes.temperature,0)\
+            \ %} {% set hysteresis_min = float(states('input_number.rika_domo_hysteresis_min'),0)\
+            \ %} {% set hysteresis_max = float(states('input_number.rika_domo_hysteresis_max'),0)\
+            \ %} {% set hysteresis_max_gf = float(states('input_number.rika_domo_hysteresis_max_gf'),0)\
+            \ %} {% if temp_indoor == 0 or target_temp == 0 %}\n  False\n{% elif states('input_boolean.arret_force_rika')\
+            \ == 'on' and states.climate.rika_domo.attributes.hvac_action == 'heating'%}\n\
+            \  True\n{% elif states('input_boolean.arret_force_rika') == 'on'%}\n  False\n\
+            {% elif states.group.ouverture_exterieur.state == 'on' and  states.climate.rika_domo.attributes.hvac_action\
+            \ == 'off' %}\n  False\n{% elif states('input_boolean.poele_rika') == 'off'\
+            \ and states.climate.rika.attributes.hvac_action != 'off'%}\n  True\n{% elif\
+            \ states('input_boolean.poele_rika') == 'on' and states.climate.rika.attributes.hvac_action\
+            \ != 'heating'%}\n  True\n{% elif target_temp - temp_indoor - hysteresis_min\
+            \ >= 0 and states.climate.rika_domo.attributes.hvac_action == 'off'%}\n  True\n\
+            {% elif target_temp - temp_indoor + hysteresis_max <= 0 and states.input_boolean.mode_grand_froid.state\
+            \ == 'off' and states.climate.rika_domo.attributes.hvac_action == 'heating'\
+            \ %}\n  True\n{% elif target_temp - temp_indoor + hysteresis_max_gf <= 0 and\
+            \ states.input_boolean.mode_grand_froid.state == 'on' and states.climate.rika_domo.attributes.hvac_action\
+            \ == 'heating' %}\n  True\n{% else %}\n  False\n{% endif %}\n"
+  action:
+    - service_template:
+        "{% set temp_indoor = float(states('sensor.lywsd03mmc_salle_a_manger_temp'),0)\
+        \ %} {% set target_temp = float(states.climate.rika.attributes.temperature,0)\
+        \ %} {% set hysteresis_min = float(states('input_number.rika_domo_hysteresis_min'),0)\
+        \ %} {% set hysteresis_max = float(states('input_number.rika_domo_hysteresis_max'),0)\
+        \ %} {% set hysteresis_max_gf = float(states('input_number.rika_domo_hysteresis_max_gf'),0)\
+        \ %} {% if states('input_boolean.arret_force_rika') == 'on' and states.climate.rika_domo.attributes.hvac_action\
+        \ == 'heating'%}\n  input_boolean.turn_off\n{% elif target_temp - temp_indoor\
+        \ - hysteresis_min >= 0 and states.climate.rika_domo.attributes.hvac_action\
+        \ == 'off'%}\n  input_boolean.turn_on\n{% elif target_temp - temp_indoor + hysteresis_max\
+        \ <= 0 and states.input_boolean.mode_grand_froid.state == 'off' and states.climate.rika_domo.attributes.hvac_action\
+        \ == 'heating' %}\n  input_boolean.turn_off\n{% elif target_temp - temp_indoor\
+        \ + hysteresis_max_gf <= 0 and states.input_boolean.mode_grand_froid.state ==\
+        \ 'on' and states.climate.rika_domo.attributes.hvac_action == 'heating' %}\n\
+        \  input_boolean.turn_off\n{% elif states('input_boolean.poele_rika') == 'off'\
+        \ and states.climate.rika.attributes.hvac_action != 'off'%}\n  input_boolean.turn_off\n\
+        {% elif states('input_boolean.poele_rika') == 'on' and states.climate.rika.attributes.hvac_action\
+        \ != 'heating'%}\n  input_boolean.turn_on\n{% endif %}\n"
+      entity_id: input_boolean.poele_rika
+    - service_template:
+        "{% if states('input_boolean.poele_rika') == 'on'%}\n  climate.turn_on\n\
+        {% elif states('input_boolean.poele_rika') == 'off'%}\n  climate.turn_off\n\
+        {% endif %}\n"
+      entity_id: climate.rika
+  mode: single
+  max_exceeded: silent
+  trace:
+    stored_traces: 20
+- id: "1645106122538"
+  alias: RIKA Liaison firenet PID
+  trigger:
+    - platform: time_pattern
+      minutes: /5
+    - platform: state
+      entity_id: input_boolean.poele_rika
+  condition:
+    - condition: and
+      conditions:
+        - condition: template
+          value_template:
+            "{% if (states('input_boolean.poele_rika') == 'off' and states.climate.rika_domo.attributes.hvac_action\
+            \ =='heating') or ( states('input_boolean.poele_rika') == 'on' and states.climate.rika_domo.attributes.hvac_action\
+            \ =='off') %}\n  True\n{% else %}\n  False\n{% endif %}\n"
+  action:
+    - service_template:
+        "{% if states('input_boolean.poele_rika') == 'on' %}\n  climate.turn_on\n\
+        {% else %}\n  climate.turn_off\n{% endif %}\n"
+      entity_id:
+        - climate.rika_domo
+        - climate.rika
+  mode: single
+  max_exceeded: silent
+  trace:
+    stored_traces: 20
+- id: "1645106197014"
+  alias: RIKA Mode Grand Froid
+  trigger:
+    - platform: time_pattern
+      minutes: /1
+    - platform: numeric_state
+      entity_id: sensor.dark_sky_apparent_temperature
+      below: "7"
+  condition:
+    - condition: template
+      value_template:
+        "  {% if float(states('sensor.dark_sky_apparent_temperature'),8)\
+        \ <= 7 and states.input_boolean.mode_grand_froid.state == 'off' %}\n    True\n\
+        \ {% elif float(states('sensor.dark_sky_apparent_temperature'),8) > 7 and states.input_boolean.mode_grand_froid.state\
+        \ == 'on' %} \n    True\n  {% else %}\n    False\n  {% endif %}"
+  action:
+    - service_template:
+        "{% if float(states('sensor.dark_sky_apparent_temperature'),8)\
+        \ <= 7 %}\n  input_boolean.turn_on\n{% else %}\n  input_boolean.turn_off\n{%\
+        \ endif %}\n"
+      entity_id: input_boolean.mode_grand_froid
+  mode: single
+  max_exceeded: silent
+- id: "1645106248743"
+  alias: "RIKA Mode confort Anticipation "
+  trigger:
+    - platform: time_pattern
+      minutes: /5
+  condition:
+    - condition: and
+      conditions:
+        - condition: template
+          value_template:
+            "{{ states.sensor.rika_domo_stove_burning.state == 'True'
+            }}"
+        - condition: template
+          value_template:
+            "{{ (as_timestamp(states.binary_sensor.poele_travail.attributes.next_trigger)
+            - as_timestamp(now()) <= 3600 or as_timestamp(states.switch.schedule_rika.attributes.next_trigger)
+            - as_timestamp(now()) <= 3600 )}}"
+        - condition: template
+          value_template: "{{ states.climate.rika.attributes.preset_mode == 'eco' }}"
+        - condition: time
+          after: 00:02
+          before: "22:59"
+  action:
+    - service: climate.set_preset_mode
+      target:
+        entity_id: climate.rika
+      data:
+        preset_mode: comfort
+  mode: single
+  max_exceeded: silent
+  trace:
+    stored_traces: 20
+- id: "1645106300475"
+  alias: RIKA Start différer mode Éco
+  trigger:
+    - platform: time_pattern
+      minutes: /5
+  condition:
+    - condition: and
+      conditions:
+        - condition: template
+          value_template:
+            "{{ states.sensor.rika_domo_stove_burning.state == 'True'
+            }}"
+        - condition: template
+          value_template:
+            "{{ states.switch.schedule_rika.attributes.current_slot > 1
+            }}"
+        - condition: template
+          value_template:
+            "{{ (as_timestamp(states.switch.schedule_rika.attributes.next_trigger)
+            - as_timestamp(now()) <= 3600 )}}"
+        - condition: template
+          value_template:
+            "{{ states.climate.rika.attributes.preset_mode == 'comfort'
+            }}"
+        - condition: state
+          entity_id: switch.schedule_rika
+          state: "on"
+        - condition: or
+          conditions:
+            - condition: template
+              value_template:
+                "{% set temp_indoor = float(states('sensor.lywsd03mmc_salle_a_manger_temp'),0)
+                %} {% set target_temp = float(states.climate.rika.attributes.temperature,0)
+                %} {{ target_temp - temp_indoor >= 0.5 }}
+
+                "
+            - condition: state
+              entity_id: media_player.tv_salon
+              state: "on"
+  action:
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.mode_confort_prolonge
+    - service: switch.turn_off
+      data: {}
+      target:
+        entity_id: switch.schedule_rika
+  mode: single
+  max_exceeded: silent
+  trace:
+    stored_traces: 20
+- id: "1645106340007"
+  alias: RIKA Stop différer mode Éco
+  trigger:
+    - platform: state
+      entity_id: sensor.rika_domo_stove_burning
+      to: "False"
+  condition:
+    - condition: state
+      entity_id: input_boolean.mode_confort_prolonge
+      state: "on"
+  action:
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.mode_confort_prolonge
+    - service: switch.turn_on
+      data: {}
+      target:
+        entity_id:
+          - switch.schedule_rika
+  mode: single
+  max_exceeded: silent
+  trace:
+    stored_traces: 20
+- id: "1645106362462"
+  alias: RIKA Mode absence
+  trigger:
+    - platform: state
+      entity_id: group.presence
+      to: not_home
+      for: 00:10:00
+  condition:
+    - condition: and
+      conditions:
+        - condition: not
+          conditions:
+            - condition: state
+              entity_id: input_boolean.arret_force_rika
+              state: "on"
+        - condition: state
+          entity_id: input_boolean.retour_domicile
+          state: "off"
+  action:
+    - service: climate.set_preset_mode
+      target:
+        entity_id: climate.rika
+      data:
+        preset_mode: away
+    - service: switch.turn_off
+      data:
+        entity_id:
+          - switch.schedule_rika
+  mode: single
+  max_exceeded: silent
+  trace:
+    stored_traces: 20
+- id: "1645106397539"
+  alias: RIKA Mode présence
+  trigger:
+    - platform: time_pattern
+      minutes: /1
+    - platform: state
+      entity_id: group.presence
+      to: home
+  condition:
+    - condition: state
+      entity_id: group.presence
+      state: home
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: input_boolean.retour_domicile
+          state: "on"
+        - condition: template
+          value_template: "{{ states.climate.rika.attributes.preset_mode == 'away' }}"
+  action:
+    - service: switch.turn_on
+      data:
+        entity_id:
+          - switch.schedule_rika
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.retour_domicile
+  mode: single
+  max_exceeded: silent
+- id: "1645106419539"
+  alias: RIKA Mode retour domicile
+  trigger:
+    - platform: state
+      entity_id: input_boolean.retour_domicile
+      to: "on"
+  condition:
+    - condition: and
+      conditions:
+        - condition: template
+          value_template:
+            "{{ states.climate.rika.attributes.preset_mode == 'away' or
+            states.climate.rika.attributes.preset_mode == 'sleep' }}"
+  action:
+    - service: switch.turn_on
+      data:
+        entity_id:
+          - switch.schedule_rika
+  mode: single
+  max_exceeded: silent
+- id: "1645106439508"
+  alias: RIKA nettoyage approfondi
+  trigger:
+    - platform: state
+      entity_id: sensor.rika_domo_stove_status
+      to: big_clean
+  condition:
+    condition: or
+    conditions:
+      - condition: and
+        conditions:
+          - condition: template
+            value_template:
+              "{{ (as_timestamp(states.switch.schedule_rika.attributes.next_trigger)
+              - as_timestamp(now()) <= 2700)}}"
+          - condition: template
+            value_template:
+              "{% set temp_indoor = float(states('sensor.lywsd03mmc_salle_a_manger_temp'),0)
+              %} {% set target_temp = float(states.climate.rika.attributes.temperature,0)
+              %} {{ temp_indoor - target_temp  >= 0 }}
+
+              "
+      - condition: template
+        value_template:
+          "{% set temp_indoor = float(states('sensor.lywsd03mmc_salle_a_manger_temp'),0)
+          %} {% set target_temp = float(states.climate.rika.attributes.temperature,0)
+          %} {{ temp_indoor - target_temp  >= 0.4 }}
+
+          "
+  action:
+    - service: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.poele_rika
+  mode: single
+  max_exceeded: silent
+  trace:
+    stored_traces: 20
+- id: "1645106463015"
+  alias: RIKA Mode nuit
+  trigger:
+    - platform: state
+      entity_id: input_boolean.mode_nuit
+      to: "on"
+  condition:
+    - condition: and
+      conditions:
+        - condition: template
+          value_template: "{{ states('input_boolean.arret_force_rika') != 'on' }}"
+        - condition: template
+          value_template: "{{ states('input_boolean.mode_vacance') != 'on' }}"
+  action:
+    - service: climate.set_preset_mode
+      target:
+        entity_id: climate.rika
+      data:
+        preset_mode: eco
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.mode_nuit
+  mode: single
+  max_exceeded: silent
+- id: "1645110339108"
+  alias: RIKA Mode vacances
+  trigger:
+    - platform: state
+      entity_id: group.presence
+      to: not_home
+      for: 00:24:00
+    - platform: state
+      entity_id: input_boolean.mode_vacance
+      to: "on"
+  condition:
+    - condition: and
+      conditions:
+        - condition: template
+          value_template: "{{ states('climate.rika') != 'off' }}"
+        - condition: state
+          entity_id: input_boolean.retour_domicile
+          state: "off"
+  action:
+    - service: climate.set_preset_mode
+      target:
+        entity_id: climate.rika
+      data:
+        preset_mode: sleep
+    - service: switch.turn_off
+      data:
+        entity_id:
+          - switch.schedule_rika
+  mode: single
+  max_exceeded: silent
+- id: "1645110380321"
+  alias: RIKA Mode retour vacances
+  trigger:
+    - platform: state
+      entity_id: group.presence
+      to: home
+    - platform: state
+      entity_id: input_boolean.mode_vacance
+      to: "off"
+  condition:
+    - condition: or
+      conditions:
+        - condition: template
+          value_template:
+            "{{ states.climate.rika.attributes.preset_mode == 'sleep'
+            }}"
+        - condition: template
+          value_template: "{{ states.input_boolean.mode_vacance.state == 'on' }}"
+  action:
+    - service: switch.turn_on
+      data:
+        entity_id:
+          - switch.schedule_rika
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.mode_vacance
+  mode: single
+  max_exceeded: silent
+
+- id: "1645114121293"
+  alias: Stop Zone
+  trigger:
+    - platform: time_pattern
+      minutes: /5
+    - platform: state
+      entity_id: climate.rika_domo
+      attribute: hvac_action
+  condition:
+    - condition: state
+      entity_id: climate.rika_z2
+      state: heat
+    - condition: or
+      conditions:
+        - condition: template
+          value_template:
+            "{{ states.climate.rika_domo.attributes.hvac_action != 'heating'
+            }}"
+        - condition: state
+          entity_id: input_boolean.mode_vacance
+          state: "on"
+  action:
+    - service: climate.turn_off
+      target:
+        entity_id: climate.rika_z2
+  mode: single
+  max_exceeded: silent
+- id: "1645114216010"
+  alias: Start Zone
+  trigger:
+    - platform: time_pattern
+      minutes: /5
+    - platform: state
+      entity_id: sensor.rika_domo_stove_status
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: climate.rika_z2
+        state: "off"
+      - condition: template
+        value_template:
+          "{{ states.sensor.rika_domo_stove_status.state == 'starting_up'
+          or states.sensor.rika_domo_stove_status.state == 'running' }}"
+      - condition: state
+        entity_id: input_boolean.mode_vacance
+        state: "off"
+  action:
+    - service: climate.turn_on
+      target:
+        entity_id: climate.rika_z2
+  mode: single
+  max_exceeded: silent
+- id: "1645114253769"
+  alias: RIKA Puissance poele
+  trigger:
+    - platform: time_pattern
+      minutes: /1
+    - platform: state
+      entity_id: input_number.rika_power
+    - platform: state
+      entity_id: number.rika_domo_heating_power
+    - platform: state
+      entity_id: group.ouverture_exterieur
+  condition:
+    - condition: and
+      conditions:
+        - condition: or
+          conditions:
+            - condition: template
+              value_template:
+                "{% if states.group.ouverture_exterieur.state == \"on\" %}\n\
+                \  {{int(30 - int(states.number.rika_domo_heating_power,0),0) | abs > 5}}\n\
+                {% elif float(states.input_number.rika_power.state,0) > 95 %}\n  {{int(100\
+                \ - int(states.number.rika_domo_heating_power,0),0) | abs > 5 }}\n{% elif\
+                \ float(states.input_number.rika_power.state,0) > 90 %}\n  {{int(95\
+                \ - int(states.number.rika_domo_heating_power,0),0) | abs > 5 }}\n{% elif\
+                \ float(states.input_number.rika_power.state,0) > 85 %}\n  {{int(90\
+                \ - int(states.number.rika_domo_heating_power,0),0) | abs > 5 }}\n{% elif\
+                \ float(states.input_number.rika_power.state,0) > 80 %}\n  {{int(85\
+                \ - int(states.number.rika_domo_heating_power,0),0) | abs > 5 }}\n{% elif\
+                \ float(states.input_number.rika_power.state,0) > 75 %}\n  {{int(80\
+                \ - int(states.number.rika_domo_heating_power,0),0) | abs > 5 }}\n{% elif\
+                \ float(states.input_number.rika_power.state,0) > 70 %}\n  {{int(75\
+                \ - int(states.number.rika_domo_heating_power,0),0) | abs > 5 }}\n{% elif\
+                \ float(states.input_number.rika_power.state,0) > 60 %}\n  {{int(70\
+                \ - int(states.number.rika_domo_heating_power,0),0) | abs > 5 }}\n{% elif\
+                \ float(states.input_number.rika_power.state,0) > 60 %}\n  {{int(65\
+                \ - int(states.number.rika_domo_heating_power,0),0) | abs > 5 }}\n{% elif\
+                \ float(states.input_number.rika_power.state,0) > 55 %}\n  {{int(60\
+                \ - int(states.number.rika_domo_heating_power,0),0) | abs > 5 }}\n{% elif\
+                \ float(states.input_number.rika_power.state,0) > 50 %}\n  {{int(55\
+                \ - int(states.number.rika_domo_heating_power,0),0) | abs > 5 }}\n{% elif\
+                \ float(states.input_number.rika_power.state,0) > 45 %}\n  {{int(50\
+                \ - int(states.number.rika_domo_heating_power,0),0) | abs > 5 }}\n{% elif\
+                \ float(states.input_number.rika_power.state,0) > 40 %}\n  {{int(45\
+                \ - int(states.number.rika_domo_heating_power,0),0) | abs > 5 }}\n{% elif\
+                \ float(states.input_number.rika_power.state,0) > 35 %}\n  {{int(40\
+                \ - int(states.number.rika_domo_heating_power,0),0) | abs > 5 }}\n{% elif\
+                \ float(states.input_number.rika_power.state,0) > 30 %}\n  {{int(35\
+                \ - int(states.number.rika_domo_heating_power,0),0) | abs > 5 }}\n{% else\
+                \ %}\n  {{int(30 - int(states.number.rika_domo_heating_power,0),0) | abs\
+                \ > 5 }}\n{% endif %}\n"
+  action:
+    - service: number.set_value
+      data_template:
+        entity_id: number.rika_domo_heating_power
+        value:
+          "{% if states.group.ouverture_exterieur.state == \"on\" %}\n  {{30}}\n\
+          {% elif float(states.input_number.rika_power.state,0) > 95 %}\n  {{100}}\n\
+          {% elif float(states.input_number.rika_power.state,0) > 90 %}\n  {{95}}\n\
+          {% elif float(states.input_number.rika_power.state,0) > 85 %}\n  {{90}}\n\
+          {% elif float(states.input_number.rika_power.state,0) > 80 %}\n  {{85}}\n\
+          {% elif float(states.input_number.rika_power.state,0) > 75 %}\n  {{80}}\n\
+          {% elif float(states.input_number.rika_power.state,0) > 70 %}\n  {{75}}\n\
+          {% elif float(states.input_number.rika_power.state,0) > 60 %}\n  {{70}}\n\
+          {% elif float(states.input_number.rika_power.state,0) > 60 %}\n  {{65}}\n\
+          {% elif float(states.input_number.rika_power.state,0) > 55 %}\n  {{60}}\n\
+          {% elif float(states.input_number.rika_power.state,0) > 50 %}\n  {{55}}\n\
+          {% elif float(states.input_number.rika_power.state,0) > 45 %}\n  {{50}}\n\
+          {% elif float(states.input_number.rika_power.state,0) > 40 %}\n  {{45}}\n\
+          {% elif float(states.input_number.rika_power.state,0) > 35 %}\n  {{40}}\n\
+          {% elif float(states.input_number.rika_power.state,0) > 30 %}\n  {{35}}\n\
+          {% else %}\n  {{30}}\n{% endif %}\n"
+  mode: single
+  max_exceeded: silent
+
+- id: "1645114476046"
+  alias: Send power to Zone2
+  trigger:
+    - platform: time_pattern
+      minutes: /1
+    - platform: state
+      entity_id: input_number.rika_z2_power
+    - platform: state
+      entity_id: number.rika_domo_convection_fan2_level
+    - platform: state
+      entity_id: group.ouverture_exterieur
+  condition:
+    - condition: and
+      conditions:
+        - condition: template
+          value_template:
+            "{% if states.group.ouverture_exterieur.state == \"on\" %}\n\
+            \  {{int(1 - int(states.number.rika_domo_convection_fan2_level.state,0),0)\
+            \ | abs >= 1}}\n{% elif float(states.input_number.rika_z2_power.state,0)\
+            \ < 5 %}\n  {{int(states.number.rika_domo_convection_fan2_level.state,0) !=\
+            \ 0}}\n{% elif float(states.input_number.rika_z2_power.state,0) < 100\
+            \ %}\n  {{int(states.number.rika_domo_convection_fan2_level.state,0) != 5}}\n\
+            {% else %}\n {{((float(states.input_number.rika_z2_power.state,0)+0.1)/20)|round(0,'ceil')\
+            \ !=  int(states.number.rika_domo_convection_fan2_level.state,0)  }}\n{% endif\
+            \ %}\n"
+  action:
+    - service: number.set_value
+      data_template:
+        entity_id: number.rika_domo_convection_fan2_level
+        value:
+          "{% if states.group.ouverture_exterieur.state == \"on\" %}\n  {{1}}\n\
+          {% elif float(states.input_number.rika_z2_power.state,0) < 5 %}\n  {{0}}\n\
+          {% else %}\n   {{((float(states.input_number.rika_z2_power.state,0)+0.1)/20)|round(0,'ceil')\
+          \ }}\n{% endif %}\n"
+  mode: single
+  max_exceeded: silent
+- id: "1645171129329"
+  alias: RIKA RAZ PID
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: sensor.rika_domo_stove_status
+      from: starting_up
+      to: running
+  condition: []
+  action:
+    - service: smart_thermostat.clear_integral
+      data: {}
+      target:
+        entity_id:
+          - climate.rika
+          - climate.rika_z2
+  mode: single
+  max_exceeded: silent
+- id: "1645460117116"
+  alias: RIKA mode confort réveil
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.poele_travail
+      to: "on"
+  condition:
+    - condition: state
+      entity_id: climate.rika
+      state: eco
+      attribute: preset_mode
+    - condition: state
+      entity_id: input_boolean.mode_vacance
+      state: "off"
+    - condition: state
+      entity_id: input_boolean.arret_force_rika
+      state: "off"
+  action:
+    - service: climate.set_preset_mode
+      data:
+        preset_mode: comfort
+      target:
+        entity_id: climate.rika
+  mode: single
+  max_exceeded: silent
+
+- id: "1647243855752"
+  alias: RIKA Nombre de sacs
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: input_number.bag_in_tank
+  condition:
+    - condition: not
+      conditions:
+        - condition: template
+          value_template: "{{int(states.input_number.bag_in_tank.state,0) == 0}}"
+  action:
+    - service: switch.turn_on
+      entity_id: switch.rajout_1_sac
+    - service: input_number.decrement
+      entity_id: input_number.bag_in_tank
+    - service: homeassistant.update_entity
+      entity_id: sensor.sacs_restants
+    - service: input_number.set_value
+      data_template:
+        entity_id: input_number.pellets_before_service_before_bag_add
+        value:
+          "{{ int(states.sensor.rika_domo_pellets_before_service.state,0) }}
+
+          "
+    - service: input_number.set_value
+      data_template:
+        entity_id: input_number.reservoir_pellet_after_bag_add
+        value:
+          "{% if int(states.sensor.reservoir_pellet.state,0) > 30 %}\n  {{45}}\n\
+          {% else %}\n  {{int(states.sensor.reservoir_pellet.state,0) + 15}}\n{% endif\
+          \ %}\n"
+    - service: input_number.set_value
+      data_template:
+        entity_id: input_number.reservoir_pellet
+        value: "{{ int(states.sensor.reservoir_pellet.state,0) }}
+
+          "
+  mode: queued
+  max: 3
+- id: "1647716830441"
+  alias: RIKA Gestion arret involontaire
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: switch.rika_domo_on_off
+      from: "on"
+      to: "off"
+  condition:
+    - condition: state
+      entity_id: input_boolean.poele_rika
+      state: "on"
+  action:
+    - service: input_boolean.turn_off
+      data: {}
+      target:
+        entity_id: input_boolean.poele_rika
+  mode: single
