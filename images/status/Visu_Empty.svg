@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 70 104.3" style="enable-background:new 0 0 70 104.3;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:url(#SVGID_1_);}
+	.st1{fill:url(#SVGID_2_);}
+	.st2{fill:none;stroke:#000000;stroke-miterlimit:10;}
+	.st3{fill:#FFFFFF;stroke:#000000;stroke-width:0.5;stroke-miterlimit:10;}
+	.st4{fill:#C1C0BF;stroke:#000000;stroke-width:0.5;stroke-miterlimit:10;}
+	.st5{fill:#7F7F7F;stroke:#000000;stroke-width:0.5;stroke-miterlimit:10;}
+	.st6{fill:#605F5F;stroke:#000000;stroke-width:0.5;stroke-miterlimit:10;}
+	.st7{fill-rule:evenodd;clip-rule:evenodd;fill:#FF0000;}
+	.st8{fill:none;stroke:#808080;stroke-width:0;stroke-linecap:square;stroke-miterlimit:10;}
+</style>
+<g>
+	
+		<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="35" y1="842.3" x2="35" y2="737.9999" gradientTransform="matrix(1 0 0 1 0 -738)">
+		<stop  offset="0" style="stop-color:#BAB9BB"/>
+		<stop  offset="0.1" style="stop-color:#B5B4B6"/>
+		<stop  offset="0.213" style="stop-color:#A8A7A9"/>
+		<stop  offset="0.3324" style="stop-color:#919092"/>
+		<stop  offset="0.4562" style="stop-color:#727172"/>
+		<stop  offset="0.5835" style="stop-color:#49494A"/>
+		<stop  offset="0.7119" style="stop-color:#181818"/>
+		<stop  offset="0.7692" style="stop-color:#000000"/>
+	</linearGradient>
+	<path class="st0" d="M23.8,104.3l-4.4-14.1H0V1.6V0h69.8v47.8l-6.6,5v6.7l6.8-4.9v35.6H50.5l-4.4,14.1L23.8,104.3L23.8,104.3z
+		 M3.1,87.1h18.7l4.4,14.1h17.7l4.4-14.1H67V60.7l-6.8,4.9V51.3l6.6-5V3.1H3.1V87.1L3.1,87.1z"/>
+	
+		<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="35.15" y1="838.2" x2="35.15" y2="742.2" gradientTransform="matrix(1 0 0 1 0 -738)">
+		<stop  offset="0" style="stop-color:#656664"/>
+		<stop  offset="0.7692" style="stop-color:#000000"/>
+	</linearGradient>
+	<polygon class="st1" points="43.2,100.2 27.1,100.2 23,86.8 22.7,86 22,86 4.3,86 4.3,4.2 65.8,4.2 65.8,45.7 59.6,50.4 59.2,50.7 
+		59.2,51.3 59.2,65.6 59.2,67.7 60.9,66.4 66,62.7 66,86 48.4,86 47.6,86 47.4,86.8 	"/>
+</g>
+<line class="st2" x1="32" y1="50.9" x2="32" y2="50.9"/>
+<rect id="XMLID_1_" x="26.2" y="90.1" transform="matrix(0.9587 -0.2843 0.2843 0.9587 -25.7263 11.9391)" class="st3" width="4.2" height="8.9"/>
+<rect id="XMLID_2_" x="32.8" y="95.6" class="st3" width="8.9" height="4.2"/>
+<rect id="XMLID_3_" x="30" y="83.8" transform="matrix(5.510597e-02 -0.9985 0.9985 5.510597e-02 -53.1455 115.5611)" class="st4" width="8.9" height="4.2"/>
+<rect id="XMLID_4_" x="37.8" y="87.2" transform="matrix(0.2901 -0.957 0.957 0.2901 -55.4198 103.8388)" class="st4" width="8.9" height="4.2"/>
+<rect id="XMLID_5_" x="40" y="73.5" transform="matrix(0.9281 -0.3722 0.3722 0.9281 -24.9455 21.9794)" class="st5" width="8.9" height="4.2"/>
+<rect id="XMLID_6_" x="48.9" y="64.1" transform="matrix(0.364 -0.9314 0.9314 0.364 -31.3378 91.1109)" class="st6" width="4.2" height="8.9"/>
+<g>
+	<polygon class="st7" points="31.2,32.8 31.2,46.5 26.9,46.5 35.1,55.1 43.4,46.5 39.1,46.5 39.1,32.8 31.2,32.8 	"/>
+	<polyline class="st8" points="31.2,32.8 31.2,46.5 26.9,46.5 35.1,55.1 43.4,46.5 39.1,46.5 39.1,32.8 31.2,32.8 	"/>
+</g>
+</svg>
