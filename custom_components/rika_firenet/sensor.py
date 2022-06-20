@@ -22,7 +22,9 @@ DEVICE_SENSORS = [
     "pellets before service",
     "fan velocity",
     "diag motor",
-    "number fail"
+    "number fail",
+    "main state",
+    "sub state"
 ]
 
 
@@ -74,7 +76,10 @@ class RikaFirenetStoveSensor(RikaFirenetEntity):
             return self._stove.get_fan_velocity()
         elif self._sensor == "number fail":
             return self._stove.get_number_fail()
-
+        elif self._sensor == "main state":
+            return self._stove.get_main_state()
+        elif self._sensor == "sub state":
+            return self._stove.get_sub_state()
 
     @property
     def unit_of_measurement(self):
@@ -96,7 +101,7 @@ class RikaFirenetStoveSensor(RikaFirenetEntity):
             return "mdi:timer-outline"
         elif self._sensor == "stove burning":
             return "mdi:fire"
-        elif self._sensor == "stove status"or self._sensor == "number fail":
+        elif self._sensor == "stove status" or self._sensor == "number fail" or self._sensor == "main state" or self._sensor == "sub state":
             return "mdi:information-outline"
         elif self._sensor == "diag motor" or self._sensor == "fan velocity":
             return "mdi:speedometer"
@@ -119,4 +124,8 @@ class RikaFirenetStoveSensor(RikaFirenetEntity):
         elif self._sensor == "fan velocity":
             return EntityCategory.DIAGNOSTIC 
         elif self._sensor == "number fail":
+            return EntityCategory.DIAGNOSTIC 
+        elif self._sensor == "main state":
+            return EntityCategory.DIAGNOSTIC 
+        elif self._sensor == "sub state":
             return EntityCategory.DIAGNOSTIC 

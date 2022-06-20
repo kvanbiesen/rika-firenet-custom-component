@@ -106,6 +106,15 @@ class RikaFirenetCoordinator(DataUpdateCoordinator):
                 stove._state = self.set_stove_controls(stove._id, stove.get_control_state())
             else:
                 stove.sync_state()
+#test
+            if stove._state['sensors']['statusMainState'] == 6 and stove.is_stove_on():
+                _LOGGER.debug('statusMainState=6 and OnOff=on')
+                _LOGGER.debug('turning off')
+                stove._state['controls']['onOff'] = False
+                self.set_stove_controls(stove._id, stove.get_control_state())
+                _LOGGER.debug('turning on')
+                stove._state['controls']['onOff']= True
+                self.set_stove_controls(stove._id, stove.get_control_state())
 
     def set_stove_controls(self, id, data):
         data2 =  self.get_stove_state(id)
@@ -378,6 +387,12 @@ class RikaFirenetStove:
     def get_status_picture(self):
         return self.get_status()[0]
 
+    def get_main_state(self):
+        return self._state['sensors']['statusMainState']
+
+    def get_sub_state(self):
+        return self._state['sensors']['statusSubState']
+
     def get_status(self):
         main_state = self._state['sensors']['statusMainState']
         sub_state = self._state['sensors']['statusSubState']
@@ -385,6 +400,8 @@ class RikaFirenetStove:
         statusError = self._state['sensors']['statusError']
         statusSubError = self._state['sensors']['statusSubError']
         lastSeenMinutes = self._state['lastSeenMinutes']
+
+
 
 # DEBUG for errors
         if lastSeenMinutes != 0:
@@ -394,12 +411,12 @@ class RikaFirenetStove:
         if statusSubError != 0:
             _LOGGER.debug("statusSubError: " + str(statusSubError))
         if lastSeenMinutes > 0:
-            return ["/", "offline"]
+            return ["https://www.rika-firenet.com/images/status/Warning_WifiSignal.svg", "offline"]
         if statusError == 1:
             if statusSubError == 1:
                 return ["/", "Error 1"]
             elif statusSubError == 2:
-                return ["/", "empty_tank"]
+                return ["https://raw.githubusercontent.com/antibill51/rika-firenet-custom-component/main/images/status/Visu_Empty.svg", "empty_tank"]
             return ["/", "statusSubError" + str(statusSubError)]
         if frost_started:
             return ["https://www.rika-firenet.com/images/status/Visu_Freeze.svg", "frost_protection"]
