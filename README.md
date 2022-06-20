@@ -45,7 +45,7 @@ I bypass Rika built'in thermostat with PID Thermostat.
 Examples in HA config folder. (lovelace / automations / ...)
 
 rika_domo: name of the stove from this component. Replace with your.
-climate.rika: PID thermostat using https://github.com/ScratMan/HASmartThermostat (fork in progress for state from input_boolean or power value).
+climate.rika: PID thermostat using https://github.com/antibill51/HASmartThermostat (fork of https://github.com/ScratMan/HASmartThermostat with toggle_header for hvac_action with pwm: 0 ).
 climate.rika_z2: PID thermostat.
 
 If I forgot elements, ask for it ;)
