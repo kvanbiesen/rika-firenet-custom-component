@@ -11,7 +11,9 @@ Platform | Description
 
 ## Installation
 
-HACS or:
+Use [hacs](https://hacs.xyz/).
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=antibill51&repository=rika-firenet-custom-component)
+or:
 
 1. Using the tool of choice open the directory (folder) for your HA configuration (where you find `configuration.yaml`).
 2. If you do not have a `custom_components` directory (folder) there, you need to create it.
