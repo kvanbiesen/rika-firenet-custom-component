@@ -28,7 +28,7 @@ DEFAULT_NAME = "Rika"
 NAME = "Rika Firenet"
 
 UPDATE_LISTENER = "update_listener"
-ISSUE_URL = "https://github.com/fockaert/rika-firenet-custom-component/issues"
+ISSUE_URL = "https://github.com/guillaumeparis2000/rika-firenet-custom-component/issues"
 
 # Defaults
 STARTUP_MESSAGE = f"""

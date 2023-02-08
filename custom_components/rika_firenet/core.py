@@ -208,6 +208,9 @@ class RikaFirenetStove:
         self._coordinator.set_stove_controls(self._id, data)
         self.sync_state()
 
+    def is_stove_eco_mode(self):
+        return bool(self._state['controls']['ecoMode'])
+
     def get_stove_set_back_temperature(self):
         return float(self._state['controls']['setBackTemperature'])
 
@@ -384,6 +387,21 @@ class RikaFirenetStove:
 
         data = self.get_control_state()
         data['onOff'] = on_off
+
+        self._coordinator.set_stove_controls(self._id, data)
+        self.sync_state()
+
+    def turn_on_eco_mode(self):
+        self.turn_on_off_eco_mode(True)
+
+    def turn_off_eco_mode(self):
+        self.turn_on_off_eco_mode(False)
+
+    def turn_on_off_eco_mode(self, on_off=False):
+        _LOGGER.info("Set Eco Mode: " + on_off)
+
+        data = self.get_control_state()
+        data['ecoMode'] = on_off
 
         self._coordinator.set_stove_controls(self._id, data)
         self.sync_state()

@@ -15,7 +15,8 @@ _LOGGER = logging.getLogger(__name__)
 DEVICE_SWITCH = [
     "on off",
     "convection fan1",
-    "convection fan2"
+    "convection fan2",
+    "eco mode"
 ]
 
 
@@ -52,6 +53,8 @@ class RikaFirenetStoveBinarySwitch(RikaFirenetEntity, SwitchEntity):
             self._stove.turn_convection_fan1_on()
         elif self._number == "convection fan2":
             self._stove.turn_convection_fan2_on()
+        elif self._number == "eco mode":
+            self._stove.turn_on_eco_mode()
 
         self.schedule_update_ha_state()
 
@@ -64,6 +67,8 @@ class RikaFirenetStoveBinarySwitch(RikaFirenetEntity, SwitchEntity):
             self._stove.turn_convection_fan1_off()
         elif self._number == "convection fan2":
             self._stove.turn_convection_fan2_off()
+        elif self._number == "eco mode":
+            self._stove.turn_off_eco_mode()
 
         self.schedule_update_ha_state()
 
@@ -79,3 +84,5 @@ class RikaFirenetStoveBinarySwitch(RikaFirenetEntity, SwitchEntity):
             return self._stove.is_stove_convection_fan1_on()
         elif self._number == "convection fan2":
             return self._stove.is_stove_convection_fan2_on()
+        elif self._number == "eco mode":
+            return self._stove.is_stove_eco_mode()
