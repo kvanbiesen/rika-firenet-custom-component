@@ -401,7 +401,7 @@ class RikaFirenetStove:
         _LOGGER.info("Set Eco Mode: " + on_off)
 
         data = self.get_control_state()
-        data['ecoMode'] = on_off
+        data['ecoMode'] = str(on_off).lower()
 
         self._coordinator.set_stove_controls(self._id, data)
         self.sync_state()
