@@ -398,7 +398,7 @@ class RikaFirenetStove:
         self.turn_on_off_eco_mode(False)
 
     def turn_on_off_eco_mode(self, on_off=False):
-        _LOGGER.info("Set Eco Mode: " + on_off)
+        _LOGGER.info("Set Eco Mode: " + str(on_off))
 
         data = self.get_control_state()
         data['ecoMode'] = str(on_off).lower()
