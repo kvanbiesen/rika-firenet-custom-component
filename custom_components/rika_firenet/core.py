@@ -421,6 +421,10 @@ class RikaFirenetStove:
             return ["/images/status/Visu_BurnOff.svg", "burn_off"]
         elif main_state == 11 or main_state == 13 or main_state == 14 or main_state == 16 or main_state == 17 or main_state == 50:
             return ["/images/status/Visu_SpliLog.svg", "split_log_check"]
+        elif main_state == 21 and sub_state == 12 and stove_temp <=350 and stove_temp >= 300:
+            return ["/images/status/Visu_SpliLog.svg", "split_log_refuel"]
+        elif main_state == 21 and sub_state == 12 and stove_temp < 300:
+            return ["/images/status/Visu_SpliLog.svg", "split_log_stop_refuel"]
         elif main_state == 20 or main_state == 21:
             return ["/images/status/Visu_SpliLog.svg", "split_log_mode"]
 
