@@ -129,3 +129,8 @@ class RikaFirenetStoveSensor(RikaFirenetEntity):
             return EntityCategory.DIAGNOSTIC 
         elif self._sensor == "sub state":
             return EntityCategory.DIAGNOSTIC 
+
+
+    @property
+    def translation_key(self):
+        return self._sensor

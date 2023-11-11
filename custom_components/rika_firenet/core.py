@@ -38,7 +38,7 @@ class RikaFirenetCoordinator(DataUpdateCoordinator):
         try:
             await self.hass.async_add_executor_job(self.update)
         except Exception as exception:
-            _LOGGER.error('Update failed to Rika Firenet')
+            _LOGGER.info('Update failed to Rika Firenet')
             raise UpdateFailed(exception)
 
     def setup(self):
@@ -132,7 +132,7 @@ class RikaFirenetCoordinator(DataUpdateCoordinator):
             else:
                 _LOGGER.debug('no send :' + str(data['revision']) + str(r.text))
                 self._number_fail += 1
-                time.sleep(2)
+                time.sleep(5)
                 data2 = self.get_stove_state(id)
                 data['revision'] = str(data2['controls']['revision'])
         _LOGGER.info('Error, data not sended')
@@ -411,7 +411,7 @@ class RikaFirenetStove:
             _LOGGER.debug("statusError: " + str(statusError))
         if statusSubError != 0:
             _LOGGER.debug("statusSubError: " + str(statusSubError))
-        if lastSeenMinutes > 0:
+        if lastSeenMinutes > 2:
             return ["https://www.rika-firenet.com/images/status/Warning_WifiSignal.svg", "offline"]
         if statusError == 1:
             if statusSubError == 1:

@@ -2,7 +2,7 @@
   "domain": "rika_firenet",
   "name": "Rika Firenet",
   "documentation": "Rika Firenet Integration",
-  "version": "0.25.0",
+  "version": "0.25.1",
   "dependencies": [],
   "codeowners": [],
   "config_flow": true,
