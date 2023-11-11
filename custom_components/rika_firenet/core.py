@@ -38,6 +38,7 @@ class RikaFirenetCoordinator(DataUpdateCoordinator):
         try:
             await self.hass.async_add_executor_job(self.update)
         except Exception as exception:
+            _LOGGER.error('Update failed to Rika Firenet')
             raise UpdateFailed(exception)
 
     def setup(self):
