@@ -49,7 +49,8 @@
           "burn_off": "Fin de combustion",
           "split_log_check": "Contrôle de la présence du bois",
           "split_log_mode": "Mode bois",
-          "unknown": "Inconnu"
+          "unknown": "Inconnu",
+          "offline": "Hors ligne"
         }
       }
     }
