@@ -80,7 +80,7 @@ class RikaFirenetCoordinator(DataUpdateCoordinator):
     def get_stove_state(self, id):
         self.connect()
         url = 'https://www.rika-firenet.com/api/client/' + id + '/status?nocache=' + str(int(time.time()))
-        data = self._client.get(url).json()
+        data = self._client.get(url, timeout=10).json()
         _LOGGER.debug('get_stove_state : ' + str(data))
         return data
 
