@@ -253,6 +253,11 @@ class RikaFirenetStove:
         self._state['controls']['convectionFan2Active'] = on_off
         self._NeedSend = True
 
+    def turn_on_off_eco_mode(self, on_off=False):
+        _LOGGER.info("Set Eco Mode: " + str(on_off))
+        self._state['controls']['ecoMode'] = on_off
+        self._NeedSend = True
+
 #End
 
     def get_id(self):
@@ -275,6 +280,9 @@ class RikaFirenetStove:
 
     def get_room_thermostat(self):
         return float(self._state['controls']['targetTemperature'])
+
+    def is_stove_eco_mode(self):
+        return bool(self._state['controls']['ecoMode'])
 
     def get_stove_set_back_temperature(self):
         return float(self._state['controls']['setBackTemperature'])
@@ -311,7 +319,7 @@ class RikaFirenetStove:
             return True
 
     def is_heating_times_active_for_comfort(self):
-        return self._state['controls']['heatingTimesActiveForComfort']
+        return bool(self._state['controls']['heatingTimesActiveForComfort'])
 
     def get_room_power_request(self):
         return int(self._state['controls']['RoomPowerRequest'])
@@ -331,6 +339,12 @@ class RikaFirenetStove:
         elif hvac_mode == HVAC_MODE_HEAT:
             _LOGGER.debug("Turn heating times off")
             self.turn_heating_times_off()
+
+    def turn_on_eco_mode(self):
+        self.turn_on_off_eco_mode(True)
+
+    def turn_off_eco_mode(self):
+        self.turn_on_off_eco_mode(False)
 
     def turn_convection_fan1_on(self):
         self.turn_convection_fan1_on_off(True)
@@ -360,7 +374,6 @@ class RikaFirenetStove:
         return int(self._state['controls']['convectionFan2Area'])
 
     def is_stove_burning(self):
-        # if self._state['sensors']['statusMainState'] == 4 or self._state['sensors']['statusMainState'] == 5:
         if self.get_main_state() == 4 or self.get_main_state() == 5:
             return True
         else:
