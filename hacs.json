@@ -1,6 +1,6 @@
 {
     "name": "Rika Firenet",
-    "hacs": "0.25.0",
+    "hacs": "2.29.0",
     "domains": [
         "climate",
         "sensor"
