@@ -50,7 +50,7 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
         self._number = number
 
     @property
-    def min_value(self) -> float:
+    def native_min_value(self) -> float:
         if self._number == "room power request":
             return 1
         elif self._number == "heating power":
@@ -70,7 +70,7 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
         return 0
 
     @property
-    def max_value(self) -> float:
+    def native_max_value(self) -> float:
         if self._number == "room power request":
             return 4
         elif self._number == "heating power":
@@ -90,7 +90,7 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
         return 100
 
     @property
-    def step(self) -> float:
+    def native_step(self) -> float:
         if self._number == "room power request":
             return 1
         elif self._number == "heating power":
@@ -110,7 +110,7 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
         return 10
 
     @property
-    def value(self):
+    def native_value(self):
         if self._number == "room power request":
             return self._stove.get_room_power_request()
         elif self._number == "heating power":
@@ -129,7 +129,7 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
             return self._stove.get_temperatureOffset()
 
     @property
-    def unit_of_measurement(self):
+    def native_unit_of_measurement(self):
         if self._number == "heating power":
             return PERCENTAGE
         elif self._number == "convection fan1 area":
@@ -147,7 +147,7 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
             return "mdi:thermometer"
         return "mdi:speedometer"
 
-    def set_value(self, value: float) -> None:
+    def set_native_value(self, value: float) -> None:
         _LOGGER.info("set_value " + self._number + " " + str(value))
         if self._number == "room power request":
             self._stove.set_room_power_request(int(value))
