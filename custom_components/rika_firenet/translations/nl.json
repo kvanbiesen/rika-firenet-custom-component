@@ -49,7 +49,8 @@
           "burn_off": "Uitdoven",
           "split_log_check": "Hout check",
           "split_log_mode": "Regeling Hout",
-          "unknown": "Onbekend"
+          "unknown": "Onbekend",
+          "offline": "Losgekoppeld"
         }
       }
     }

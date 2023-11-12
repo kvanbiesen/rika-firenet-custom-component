@@ -18,11 +18,11 @@ class RikaFirenetCoordinator(DataUpdateCoordinator):
         self.hass = hass
         self._username = username
         self._password = password
-        self._default_temperature = default_temperature
+        self._default_temperature = int(default_temperature)
         self._default_scan_interval = timedelta(seconds=default_scan_interval)
         self._client = None
         self._stoves = None
-        self._number_fail = 0
+        self._number_fail = int(0)
         self.platforms = []
 
         if not config_flow:
@@ -50,10 +50,10 @@ class RikaFirenetCoordinator(DataUpdateCoordinator):
         return self._stoves
 
     def get_default_temperature(self):
-        return self._default_temperature
+        return int(self._default_temperature)
 
     def get_number_fail(self):
-        return self._number_fail
+        return int(self._number_fail)
 
     def connect(self):
         if self.is_authenticated():
@@ -87,7 +87,7 @@ class RikaFirenetCoordinator(DataUpdateCoordinator):
     def setup_stoves(self):
         self.connect()
         stoves = []
-        postResponse = self._client.get('https://www.rika-firenet.com/web/summary')
+        postResponse = self._client.get('https://www.rika-firenet.com/web/summary', timeout=10)
         soup = BeautifulSoup(postResponse.content, "html.parser")
         stoveList = soup.find("ul", {"id": "stoveList"})
         if stoveList is None:
@@ -108,7 +108,8 @@ class RikaFirenetCoordinator(DataUpdateCoordinator):
             else:
                 stove.sync_state()
 #test
-            if stove._state['sensors']['statusMainState'] == 6 and stove.is_stove_on():
+            # if stove._state['sensors']['statusMainState'] == 6 and stove.is_stove_on():
+            if stove.get_main_state() == 6 and stove.is_stove_on():
                 _LOGGER.debug('statusMainState=6 and OnOff=on')
                 _LOGGER.debug('turning off')
                 stove._state['controls']['onOff'] = False
@@ -152,7 +153,7 @@ class RikaFirenetStove:
         self._NeedSend = False
 
     def get_number_fail(self):
-        return self._number_fail
+        return int(self._number_fail)
 
     def __repr__(self):
         return {'id': self._id, 'name': self._name}
@@ -169,76 +170,76 @@ class RikaFirenetStove:
 
     def set_temperatureOffset(self, temperature):
         _LOGGER.debug("set_offset_temperature(): " + str(temperature))
-        self._state['controls']['temperatureOffset'] = temperature
+        self._state['controls']['temperatureOffset'] = float(temperature)
         self._NeedSend = True
 
     def set_stove_temperature(self, temperature):
         _LOGGER.debug("set_stove_temperature(): " + str(temperature))
-        self._state['controls']['targetTemperature'] = temperature
+        self._state['controls']['targetTemperature'] = float(temperature)
         self._NeedSend = True
 
     def set_stove_set_back_temperature(self, temperature):
         _LOGGER.debug("set_back_temperature(): " + str(temperature))
-        self._state['controls']['setBackTemperature'] = temperature
+        self._state['controls']['setBackTemperature'] = float(temperature)
         self._NeedSend = True
 
     def set_stove_operation_mode(self, mode):
         _LOGGER.debug("set_stove_operation_mode(): " + str(mode))
-        self._state['controls']['operatingMode'] = mode
+        self._state['controls']['operatingMode'] = int(mode)
         self._NeedSend = True
 
     def set_heating_times_active_for_comfort(self, active):
         _LOGGER.debug("set_heating_times_active_for_comfort(): " + str(active))
         self._state['controls']['onOff'] = True
-        self._state['controls']['heatingTimesActiveForComfort'] = active
+        self._state['controls']['heatingTimesActiveForComfort'] = bool(active)
         self._NeedSend = True
 
     def set_room_power_request(self, power):
         _LOGGER.debug("set_room_power_request(): " + str(power))
-        self._state['controls']['RoomPowerRequest'] = power
+        self._state['controls']['RoomPowerRequest'] = int(power)
         self._NeedSend = True
 
     def set_heating_power(self, power):
         _LOGGER.debug("set_heating_power(): " + str(power))
-        self._state['controls']['heatingPower'] = power
+        self._state['controls']['heatingPower'] = int(power)
         self._NeedSend = True
 
     def set_convection_fan1_level(self, level):
         _LOGGER.debug("set_convection_fan1_level(): " + str(level))
-        self._state['controls']['convectionFan1Level'] = level
+        self._state['controls']['convectionFan1Level'] = int(level)
         self._NeedSend = True
 
     def set_convection_fan1_area(self, area):
         _LOGGER.debug("set_convection_fan1_area(): " + str(area))
-        self._state['controls']['convectionFan1Area'] = area
+        self._state['controls']['convectionFan1Area'] = int(area)
         self._NeedSend = True
 
     def set_convection_fan2_level(self, level):
         _LOGGER.debug("set_convection_fan2_level(): " + str(level))
-        self._state['controls']['convectionFan2Level'] = level
+        self._state['controls']['convectionFan2Level'] = int(level)
         self._NeedSend = True
 
     def set_convection_fan2_area(self, area):
         _LOGGER.debug("set_convection_fan2_area(): " + str(area))
-        self._state['controls']['convectionFan2Area'] = area
+        self._state['controls']['convectionFan2Area'] = int(area)
         self._NeedSend = True
 
     def turn_on_off(self, on_off=True):
         _LOGGER.debug("turn_off(): " + str(on_off))
-        self._state['controls']['onOff'] = on_off
+        self._state['controls']['onOff'] = bool(on_off)
         self._NeedSend = True
 
     def turn_heating_times_on(self): 
         self._state['controls']['onOff'] = True
         self._state['controls']['heatingTimesActiveForComfort'] = True
-        if not self.get_stove_operation_mode() is 2:
+        if not self.get_stove_operation_mode() == 2:
             self._state['controls']['operatingMode'] = int(1)
         self._NeedSend = True
 
     def turn_heating_times_off(self):
         self._state['controls']['onOff'] = True
         self._state['controls']['heatingTimesActiveForComfort'] = False
-        if not self.get_stove_operation_mode() is 2:
+        if not self.get_stove_operation_mode() == 2:
             self._state['controls']['operatingMode'] = int(0)
         self._NeedSend = True
 
@@ -288,25 +289,25 @@ class RikaFirenetStove:
         self.turn_on_off(False)
 
     def get_stove_operation_mode(self):
-        return self._state['controls']['operatingMode']
+        return int(self._state['controls']['operatingMode'])
 
     def get_hvac_mode(self):
         if not self.is_stove_on():
             return HVAC_MODE_OFF
-        elif self.is_stove_heating_times_on() == True:
+        elif self.is_stove_heating_times_on():
             return HVAC_MODE_AUTO    
-        elif self.is_stove_heating_times_on() == False: 
+        elif not self.is_stove_heating_times_on(): 
             return HVAC_MODE_HEAT
 
     def is_stove_heating_times_on(self):
-        if self.get_stove_operation_mode() is 2:
+        if self.get_stove_operation_mode() == 2:
             if not self.is_heating_times_active_for_comfort():
                 return False
             else:
                 return True
-        elif self.get_stove_operation_mode() is 0:
+        elif self.get_stove_operation_mode() == 0:
             return False
-        elif self.get_stove_operation_mode() is 1:
+        elif self.get_stove_operation_mode() == 1:
             return True
 
     def is_heating_times_active_for_comfort(self):
@@ -359,7 +360,8 @@ class RikaFirenetStove:
         return int(self._state['controls']['convectionFan2Area'])
 
     def is_stove_burning(self):
-        if self._state['sensors']['statusMainState'] == 4 or self._state['sensors']['statusMainState'] == 5:
+        # if self._state['sensors']['statusMainState'] == 4 or self._state['sensors']['statusMainState'] == 5:
+        if self.get_main_state() == 4 or self.get_main_state() == 5:
             return True
         else:
             return False
@@ -389,18 +391,18 @@ class RikaFirenetStove:
         return self.get_status()[0]
 
     def get_main_state(self):
-        return self._state['sensors']['statusMainState']
+        return int(self._state['sensors']['statusMainState'])
 
     def get_sub_state(self):
-        return self._state['sensors']['statusSubState']
+        return int(self._state['sensors']['statusSubState'])
 
     def get_status(self):
-        main_state = self._state['sensors']['statusMainState']
-        sub_state = self._state['sensors']['statusSubState']
-        frost_started = self._state['sensors']['statusFrostStarted']
-        statusError = self._state['sensors']['statusError']
-        statusSubError = self._state['sensors']['statusSubError']
-        lastSeenMinutes = self._state['lastSeenMinutes']
+        main_state = self.get_main_state()
+        sub_state = self.get_sub_state()
+        frost_started = bool(self._state['sensors']['statusFrostStarted'])
+        statusError = int(self._state['sensors']['statusError'])
+        statusSubError = int(self._state['sensors']['statusSubError'])
+        lastSeenMinutes = int(self._state['lastSeenMinutes'])
 
 
 

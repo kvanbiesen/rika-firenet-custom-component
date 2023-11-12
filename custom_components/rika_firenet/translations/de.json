@@ -49,7 +49,8 @@
           "burn_off": "Ausbrand",
           "split_log_check": "Scheitholzcheck",
           "split_log_mode": "Scheitholzbetrieb",
-          "unknown": "Unbekanntes Problem"
+          "unknown": "Unbekanntes Problem",
+          "offline": "Verlassen"
         }
       }
     }

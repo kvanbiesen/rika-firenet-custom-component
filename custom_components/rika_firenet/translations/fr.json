@@ -50,7 +50,7 @@
           "split_log_check": "Contrôle de la présence du bois",
           "split_log_mode": "Mode bois",
           "unknown": "Inconnu",
-          "offline": "Hors ligne"
+          "offline": "Déconnecté"
         }
       }
     }
