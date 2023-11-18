@@ -14,21 +14,28 @@ _LOGGER = logging.getLogger(__name__)
 
 DEVICE_SWITCH = [
     "on off",
-    "convection fan1",
-    "convection fan2",
-    "heating times",
-    "eco mode"
+    "heating times"
 ]
+
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
     _LOGGER.info("setting up platform switches")
     coordinator: RikaFirenetCoordinator = hass.data[DOMAIN][entry.entry_id]
 
-    stove_entities = []
+    stove_entities = []        
 
     # Create stove switches
     for stove in coordinator.get_stoves():
+
+# Ajout switch selon type de poele
+        if RikaFirenetStove.is_EcoModePossible(stove) :
+            DEVICE_SWITCH.append("eco mode")
+        if RikaFirenetStove.is_multiAir1(stove) :
+            DEVICE_SWITCH.append("convection fan1")
+        if RikaFirenetStove.is_multiAir2(stove) :
+            DEVICE_SWITCH.append("convection fan2")
+
         stove_entities.extend(
             [
                 RikaFirenetStoveBinarySwitch(entry, stove, coordinator, number)

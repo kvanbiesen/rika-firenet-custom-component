@@ -23,6 +23,7 @@ class RikaFirenetCoordinator(DataUpdateCoordinator):
         self._client = None
         self._stoves = None
         self._number_fail = int(0)
+        self._NeedSend = bool(False)
         self.platforms = []
 
         if not config_flow:
@@ -54,6 +55,9 @@ class RikaFirenetCoordinator(DataUpdateCoordinator):
 
     def get_number_fail(self):
         return int(self._number_fail)
+    
+    def set_NeedSend(self):
+        self._NeedSend = True
 
     def connect(self):
         if self.is_authenticated():
@@ -102,8 +106,9 @@ class RikaFirenetCoordinator(DataUpdateCoordinator):
 
     def update(self):
         _LOGGER.debug("Update by timeout reached")
+        _LOGGER.debug('NeedSend : ' + str(self._NeedSend))
         for stove in self._stoves:
-            if stove._state != None and stove._NeedSend == True :
+            if stove._state != None and self._NeedSend == True :
                 stove._state = self.set_stove_controls(stove._id, stove.get_control_state())
             else:
                 stove.sync_state()
@@ -137,6 +142,7 @@ class RikaFirenetCoordinator(DataUpdateCoordinator):
                 data2 = self.get_stove_state(id)
                 data['revision'] = str(data2['controls']['revision'])
         _LOGGER.info('Error, data not sended')
+
         return data
 
 
@@ -149,11 +155,9 @@ class RikaFirenetStove:
         self._name = name
         self._previous_temperature = None
         self._state = None
-        self._number_fail = 0
-        self._NeedSend = False
 
     def get_number_fail(self):
-        return int(self._number_fail)
+        return int(self._coordinator.get_number_fail())
 
     def __repr__(self):
         return {'id': self._id, 'name': self._name}
@@ -164,99 +168,98 @@ class RikaFirenetStove:
     def sync_state(self):
         _LOGGER.debug("Updating stove %s", self._id)
         self._state = self._coordinator.get_stove_state(self._id)
-        self._number_fail = self._coordinator.get_number_fail()
 
 #Send command
 
     def set_temperatureOffset(self, temperature):
         _LOGGER.debug("set_offset_temperature(): " + str(temperature))
         self._state['controls']['temperatureOffset'] = float(temperature)
-        self._NeedSend = True
+        self._coordinator.set_NeedSend()
 
     def set_stove_temperature(self, temperature):
         _LOGGER.debug("set_stove_temperature(): " + str(temperature))
         self._state['controls']['targetTemperature'] = float(temperature)
-        self._NeedSend = True
+        self._coordinator.set_NeedSend()
 
     def set_stove_set_back_temperature(self, temperature):
         _LOGGER.debug("set_back_temperature(): " + str(temperature))
         self._state['controls']['setBackTemperature'] = float(temperature)
-        self._NeedSend = True
+        self._coordinator.set_NeedSend()
 
     def set_stove_operation_mode(self, mode):
         _LOGGER.debug("set_stove_operation_mode(): " + str(mode))
         self._state['controls']['operatingMode'] = int(mode)
-        self._NeedSend = True
+        self._coordinator.set_NeedSend()
 
     def set_heating_times_active_for_comfort(self, active):
         _LOGGER.debug("set_heating_times_active_for_comfort(): " + str(active))
         self._state['controls']['onOff'] = True
         self._state['controls']['heatingTimesActiveForComfort'] = bool(active)
-        self._NeedSend = True
+        self._coordinator.set_NeedSend()
 
     def set_room_power_request(self, power):
         _LOGGER.debug("set_room_power_request(): " + str(power))
         self._state['controls']['RoomPowerRequest'] = int(power)
-        self._NeedSend = True
+        self._coordinator.set_NeedSend()
 
     def set_heating_power(self, power):
         _LOGGER.debug("set_heating_power(): " + str(power))
         self._state['controls']['heatingPower'] = int(power)
-        self._NeedSend = True
+        self._coordinator.set_NeedSend()
 
     def set_convection_fan1_level(self, level):
         _LOGGER.debug("set_convection_fan1_level(): " + str(level))
         self._state['controls']['convectionFan1Level'] = int(level)
-        self._NeedSend = True
+        self._coordinator.set_NeedSend()
 
     def set_convection_fan1_area(self, area):
         _LOGGER.debug("set_convection_fan1_area(): " + str(area))
         self._state['controls']['convectionFan1Area'] = int(area)
-        self._NeedSend = True
+        self._coordinator.set_NeedSend()
 
     def set_convection_fan2_level(self, level):
         _LOGGER.debug("set_convection_fan2_level(): " + str(level))
         self._state['controls']['convectionFan2Level'] = int(level)
-        self._NeedSend = True
+        self._coordinator.set_NeedSend()
 
     def set_convection_fan2_area(self, area):
         _LOGGER.debug("set_convection_fan2_area(): " + str(area))
         self._state['controls']['convectionFan2Area'] = int(area)
-        self._NeedSend = True
+        self._coordinator.set_NeedSend()
 
     def turn_on_off(self, on_off=True):
         _LOGGER.debug("turn_off(): " + str(on_off))
         self._state['controls']['onOff'] = bool(on_off)
-        self._NeedSend = True
+        self._coordinator.set_NeedSend()
 
     def turn_heating_times_on(self): 
         self._state['controls']['onOff'] = True
         self._state['controls']['heatingTimesActiveForComfort'] = True
         if not self.get_stove_operation_mode() == 2:
             self._state['controls']['operatingMode'] = int(1)
-        self._NeedSend = True
+        self._coordinator.set_NeedSend()
 
     def turn_heating_times_off(self):
         self._state['controls']['onOff'] = True
         self._state['controls']['heatingTimesActiveForComfort'] = False
         if not self.get_stove_operation_mode() == 2:
             self._state['controls']['operatingMode'] = int(0)
-        self._NeedSend = True
+        self._coordinator.set_NeedSend()
 
     def turn_convection_fan1_on_off(self, on_off=True):
         _LOGGER.debug("turn_convection_fan1_on_off(): " + str(on_off))
         self._state['controls']['convectionFan1Active'] = on_off
-        self._NeedSend = True
+        self._coordinator.set_NeedSend()
 
     def turn_convection_fan2_on_off(self, on_off=True):
         _LOGGER.debug("turn_convection_fan2_on_off(): " + str(on_off))
         self._state['controls']['convectionFan2Active'] = on_off
-        self._NeedSend = True
+        self._coordinator.set_NeedSend()
 
     def turn_on_off_eco_mode(self, on_off=False):
         _LOGGER.info("Set Eco Mode: " + str(on_off))
         self._state['controls']['ecoMode'] = on_off
-        self._NeedSend = True
+        self._coordinator.set_NeedSend()
 
 #End
 
@@ -408,6 +411,16 @@ class RikaFirenetStove:
 
     def get_sub_state(self):
         return int(self._state['sensors']['statusSubState'])
+    
+    def is_EcoModePossible(self):
+        return bool(self._state['sensors']['parameterEcoModePossible'])
+
+    def is_multiAir1(self):
+        return bool(self._state['stoveFeatures']['multiAir1'])
+
+    def is_multiAir2(self):
+        return bool(self._state['stoveFeatures']['multiAir2'])
+
 
     def get_status(self):
         main_state = self.get_main_state()

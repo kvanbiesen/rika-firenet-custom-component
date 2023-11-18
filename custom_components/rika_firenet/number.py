@@ -15,10 +15,6 @@ _LOGGER = logging.getLogger(__name__)
 DEVICE_NUMBERS = [
     "room power request",
     "heating power",
-    "convection fan1 level",
-    "convection fan1 area",
-    "convection fan2 level",
-    "convection fan2 area",
     "temperature offset",
     "set back temperature"
 ]
@@ -32,6 +28,15 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
     # Create stove numbers
     for stove in coordinator.get_stoves():
+
+# Ajout number selon type de poele
+        if RikaFirenetStove.is_multiAir1(stove) :
+            DEVICE_NUMBERS.append("convection fan1 level")
+            DEVICE_NUMBERS.append("convection fan1 area")
+        if RikaFirenetStove.is_multiAir2(stove) :
+            DEVICE_NUMBERS.append("convection fan2 level")
+            DEVICE_NUMBERS.append("convection fan2 area")
+
         stove_entities.extend(
             [
                 RikaFirenetStoveNumber(entry, stove, coordinator, number)
