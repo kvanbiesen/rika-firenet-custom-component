@@ -412,6 +412,12 @@ class RikaFirenetStove:
     def get_sub_state(self):
         return int(self._state['sensors']['statusSubState'])
     
+    def get_status_error(self):
+        return int(self._state['sensors']['statusError'])
+    
+    def get_status_sub_error(self):
+        return int(self._state['sensors']['statusSubState'])
+    
     def is_EcoModePossible(self):
         return bool(self._state['sensors']['parameterEcoModePossible'])
 
@@ -426,8 +432,8 @@ class RikaFirenetStove:
         main_state = self.get_main_state()
         sub_state = self.get_sub_state()
         frost_started = bool(self._state['sensors']['statusFrostStarted'])
-        statusError = int(self._state['sensors']['statusError'])
-        statusSubError = int(self._state['sensors']['statusSubError'])
+        statusError = self.get_status_error()
+        statusSubError = self.get_status_sub_error()
         lastSeenMinutes = int(self._state['lastSeenMinutes'])
 
 
@@ -443,10 +449,12 @@ class RikaFirenetStove:
             return ["https://www.rika-firenet.com/images/status/Warning_WifiSignal.svg", "offline"]
         if statusError == 1:
             if statusSubError == 1:
-                return ["/", "Error 1"]
+                return ["https://raw.githubusercontent.com/antibill51/rika-firenet-custom-component/main/images/status/Visu_Error.svg", "Error"]
             elif statusSubError == 2:
                 return ["https://raw.githubusercontent.com/antibill51/rika-firenet-custom-component/main/images/status/Visu_Empty.svg", "empty_tank"]
             return ["/", "statusSubError" + str(statusSubError)]
+        if statusError == 32768:
+            return ["https://raw.githubusercontent.com/antibill51/rika-firenet-custom-component/main/images/status/Visu_smoke_fan.svg", "smoke_fan"]
         if frost_started:
             return ["https://www.rika-firenet.com/images/status/Visu_Freeze.svg", "frost_protection"]
         if main_state == 1:

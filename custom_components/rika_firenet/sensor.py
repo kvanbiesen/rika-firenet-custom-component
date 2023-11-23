@@ -24,7 +24,9 @@ DEVICE_SENSORS = [
     "diag motor",
     "number fail",
     "main state",
-    "sub state"
+    "sub state",
+    "statusError",
+    "statusSubError"
 ]
 
 
@@ -80,6 +82,11 @@ class RikaFirenetStoveSensor(RikaFirenetEntity):
             return self._stove.get_main_state()
         elif self._sensor == "sub state":
             return self._stove.get_sub_state()
+        elif self._sensor == "statusError" :
+            return self._stove.get_status_error()
+        elif self._sensor == "statusSubError":
+            return self._stove.get_status_sub_error()
+
 
     @property
     def unit_of_measurement(self):
@@ -128,6 +135,10 @@ class RikaFirenetStoveSensor(RikaFirenetEntity):
         elif self._sensor == "main state":
             return EntityCategory.DIAGNOSTIC 
         elif self._sensor == "sub state":
+            return EntityCategory.DIAGNOSTIC 
+        elif self._sensor == "statusError" :
+            return EntityCategory.DIAGNOSTIC 
+        elif self._sensor == "statusSubError":
             return EntityCategory.DIAGNOSTIC 
 
 
