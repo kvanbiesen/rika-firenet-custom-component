@@ -416,7 +416,7 @@ class RikaFirenetStove:
         return int(self._state['sensors']['statusError'])
     
     def get_status_sub_error(self):
-        return int(self._state['sensors']['statusSubState'])
+        return int(self._state['sensors']['statusSubError'])
     
     def is_EcoModePossible(self):
         return bool(self._state['sensors']['parameterEcoModePossible'])
