@@ -50,7 +50,10 @@
           "split_log_check": "Split log check",
           "split_log_mode": "Split log mode",
           "unknown": "Unknown",
-          "offline": "Offline"
+          "offline": "Offline",
+          "smoke_fan": "Error smoke fan",
+          "error": "Error",
+          "empty_tank": "Empty tank"
         }
       }
     }

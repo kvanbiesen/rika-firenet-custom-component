@@ -50,7 +50,10 @@
           "split_log_check": "Scheitholzcheck",
           "split_log_mode": "Scheitholzbetrieb",
           "unknown": "Unbekanntes Problem",
-          "offline": "Verlassen"
+          "offline": "Verlassen",
+          "smoke_fan": "Error smoke fan",
+          "error": "Error",
+          "empty_tank": "Empty tank"
         }
       }
     }
