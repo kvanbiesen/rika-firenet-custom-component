@@ -419,7 +419,7 @@ class RikaFirenetStove:
         return int(self._state['sensors']['statusSubError'])
     
     def is_EcoModePossible(self):
-        return bool(self._state['sensors']['parameterEcoModePossible'])
+        return bool(self._state['stoveFeatures']['airFlaps'])
 
     def is_multiAir1(self):
         return bool(self._state['stoveFeatures']['multiAir1'])
@@ -435,7 +435,7 @@ class RikaFirenetStove:
         statusError = self.get_status_error()
         statusSubError = self.get_status_sub_error()
         lastSeenMinutes = int(self._state['lastSeenMinutes'])
-
+        stove_temp = self.get_stove_temperature()
 
 
 # DEBUG for errors
