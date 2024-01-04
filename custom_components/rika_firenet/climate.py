@@ -1,17 +1,13 @@
 import logging
 
 from homeassistant.components.climate import ClimateEntity
-from homeassistant.components.climate.const import (HVAC_MODE_AUTO,
-                                                    HVAC_MODE_HEAT,
-                                                    HVAC_MODE_OFF,
-                                                    SUPPORT_PRESET_MODE,
-                                                    SUPPORT_TARGET_TEMPERATURE,
+from homeassistant.components.climate.const import (HVACMode,
+                                                    ClimateEntityFeature,
                                                     PRESET_COMFORT,
                                                     PRESET_NONE,
-                                                    CURRENT_HVAC_OFF,
-                                                    CURRENT_HVAC_IDLE,
-                                                    CURRENT_HVAC_HEAT)
-from homeassistant.const import (ATTR_TEMPERATURE, TEMP_CELSIUS)
+                                                    HVACAction,
+                                                    )
+from homeassistant.const import (ATTR_TEMPERATURE, UnitOfTemperature)
 
 from .const import (DOMAIN, SUPPORT_PRESET)
 from .core import RikaFirenetCoordinator
@@ -19,12 +15,12 @@ from .entity import RikaFirenetEntity
 
 _LOGGER = logging.getLogger(__name__)
 
-SUPPORT_FLAGS = SUPPORT_TARGET_TEMPERATURE | SUPPORT_PRESET_MODE
+SUPPORT_FLAGS = ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.PRESET_MODE
 
 MIN_TEMP = 14
 MAX_TEMP = 28
 
-HVAC_MODES = [HVAC_MODE_AUTO, HVAC_MODE_HEAT, HVAC_MODE_OFF]
+HVAC_MODES = [HVACMode.AUTO, HVACMode.HEAT, HVACMode.OFF]
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
@@ -109,13 +105,13 @@ class RikaFirenetStoveClimate(RikaFirenetEntity, ClimateEntity):
     def hvac_action(self):
         """Return current operation ie. heat, cool, idle."""
         if self._stove.get_status_text() == "stove_off":
-            return CURRENT_HVAC_OFF
+            return  HVACAction.OFF
         elif self._stove.get_status_text() == "offline":
-            return CURRENT_HVAC_OFF
+            return  HVACAction.OFF
         elif self._stove.get_status_text() == "standby":
-            return CURRENT_HVAC_IDLE
+            return  HVACAction.IDLE
         else:
-            return CURRENT_HVAC_HEAT
+            return  HVACAction.HEAT
 
     def set_hvac_mode(self, hvac_mode):
         _LOGGER.debug('set_hvac_mode()): ' + str(hvac_mode))
@@ -128,7 +124,7 @@ class RikaFirenetStoveClimate(RikaFirenetEntity, ClimateEntity):
 
     @property
     def temperature_unit(self):
-        return TEMP_CELSIUS
+        return UnitOfTemperature.CELSIUS
 
     def set_temperature(self, **kwargs):
         temperature = int(kwargs.get(ATTR_TEMPERATURE))

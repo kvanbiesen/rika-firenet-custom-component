@@ -1,6 +1,6 @@
 import logging
 
-from homeassistant.const import PERCENTAGE, TEMP_CELSIUS
+from homeassistant.const import PERCENTAGE, UnitOfTemperature
 from .entity import RikaFirenetEntity
 from homeassistant.components.number import NumberEntity
 
@@ -142,9 +142,9 @@ class RikaFirenetStoveNumber(RikaFirenetEntity, NumberEntity):
         elif self._number == "convection fan2 area":
             return PERCENTAGE
         elif self._number == "set back temperature":
-            return TEMP_CELSIUS
+            return UnitOfTemperature.CELSIUS
         elif self._number == "temperature offset":
-            return TEMP_CELSIUS
+            return UnitOfTemperature.CELSIUS
 
     @property
     def icon(self):

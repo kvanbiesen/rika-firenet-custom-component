@@ -5,9 +5,7 @@ from datetime import datetime, timedelta
 
 import requests
 from bs4 import BeautifulSoup
-from homeassistant.components.climate.const import (HVAC_MODE_AUTO,
-                                                    HVAC_MODE_HEAT,
-                                                    HVAC_MODE_OFF)
+from homeassistant.components.climate.const import (HVACMode)
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from .const import DOMAIN
 
@@ -304,11 +302,11 @@ class RikaFirenetStove:
 
     def get_hvac_mode(self):
         if not self.is_stove_on():
-            return HVAC_MODE_OFF
+            return HVACMode.OFF
         elif self.is_stove_heating_times_on():
-            return HVAC_MODE_AUTO    
+            return HVACMode.AUTO    
         elif not self.is_stove_heating_times_on(): 
-            return HVAC_MODE_HEAT
+            return HVACMode.HEAT
 
     def is_stove_heating_times_on(self):
         if self.get_stove_operation_mode() == 2:
@@ -334,12 +332,12 @@ class RikaFirenetStove:
         return bool(self._state['controls']['convectionFan1Active'])
 
     def set_hvac_mode(self, hvac_mode):
-        if hvac_mode == HVAC_MODE_OFF:
+        if hvac_mode == HVACMode.OFF:
             self.turn_off()
-        elif hvac_mode == HVAC_MODE_AUTO:
+        elif hvac_mode == HVACMode.AUTO:
             _LOGGER.debug("Turn heating times on")
             self.turn_heating_times_on()
-        elif hvac_mode == HVAC_MODE_HEAT:
+        elif hvac_mode == HVACMode.HEAT:
             _LOGGER.debug("Turn heating times off")
             self.turn_heating_times_off()
 
