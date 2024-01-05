@@ -1,6 +1,5 @@
 {
   "config": {
-    "title": "Rika Firenet",
     "step": {
       "user": {
         "title": "Rika Firenet",
@@ -34,7 +33,7 @@
   },
   "entity": {
     "sensor": {
-      "stove status": {
+      "stove_status": {
         "state": {
           "frost_protection": "Vorst beveiliging",
           "stove_off": "Kachel uit",
