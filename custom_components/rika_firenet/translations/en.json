@@ -48,6 +48,7 @@
           "burn_off": "Burn off",
           "split_log_check": "Split log check",
           "split_log_mode": "Split log mode",
+          "split_log_stop_refuel": "Split log stop refuel",
           "unknown": "Unknown",
           "offline": "Offline",
           "smoke_fan": "Error smoke fan",

@@ -48,6 +48,7 @@
           "burn_off": "Fin de combustion",
           "split_log_check": "Contrôle de la présence du bois",
           "split_log_mode": "Mode bois",
+          "split_log_stop_refuel": "Ne pas réalimenter",
           "unknown": "Inconnu",
           "offline": "Déconnecté",
           "smoke_fan": "Erreur ventil. fumée",

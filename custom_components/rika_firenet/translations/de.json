@@ -48,6 +48,7 @@
           "burn_off": "Ausbrand",
           "split_log_check": "Scheitholzcheck",
           "split_log_mode": "Scheitholzbetrieb",
+          "split_log_stop_refuel": "Kein Holz hinzufügen",
           "unknown": "Unbekanntes Problem",
           "offline": "Verlassen",
           "smoke_fan": "Error smoke fan",

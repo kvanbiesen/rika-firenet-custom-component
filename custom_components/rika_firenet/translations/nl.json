@@ -48,6 +48,7 @@
           "burn_off": "Uitdoven",
           "split_log_check": "Hout check",
           "split_log_mode": "Regeling Hout",
+          "split_log_stop_refuel": "Niet opnieuw voeden",
           "unknown": "Onbekend",
           "offline": "Losgekoppeld",
           "smoke_fan": "Error smoke fan",

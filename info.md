@@ -2,7 +2,6 @@
 [![GitHub Activity][commits-shield]][commits]
 [![Community Forum][forum-shield]][forum]
 
-_Component to integrate with [blueprint][blueprint]._
 
 **This component will set up the following platforms.**
 
@@ -21,7 +20,8 @@ Platform | Description
 
 ## Configuration is done in the UI
 
-Data list : 
+## Data list : 
+```
 {
    "name":"Rika DOMO",
    "stoveID":"27252457",
@@ -89,20 +89,16 @@ Data list :
       "inputUpperTemperatureLimiter":true,
       "inputPressureSwitch":true,
       "inputPressureSensor":0,
-
       "inputGridContact":true,
       "inputDoor":true,
       "inputCover":true,
       "inputExternalRequest":true,
       "inputBurnBackFlapSwitch":true,
       "inputFlueGasFlapSwitch":true,
-
       "inputBoardTemperature":"2.7",
-
       "inputCurrentStage":30,
       "inputTargetStagePID":70,
       "inputCurrentStagePID":30,
-
       "statusMainState":3,
       "statusSubState":1,
       "statusWifiStrength":-67,
@@ -123,9 +119,7 @@ Data list :
       "parameterRuntimeLogs":0,
       "parameterFeedRateTotal":4500,
       "parameterFeedRateService":978,
-
       "parameterServiceCountdownKg":22,
-
       "parameterServiceCountdownTime":0,
       "parameterIgnitionCount":2087,
       "parameterOnOffCycleCount":197,
@@ -165,10 +159,8 @@ Data list :
    },
    "stoveType":"DOMO MultiAir",
    "stoveFeatures":{
-
       "multiAir1":true,
       "multiAir2":true,
-
       "insertionMotor":false,
       "airFlaps":false,
       "logRuntime":false,
@@ -176,9 +168,10 @@ Data list :
    },
    "oem":"RIKA"
 }
+```
 <!---->
 ***
-
+Si besoin, les échanges en français sont également acceptés.
 [rika_firenet]: https://github.com/antibill51/rika-firenet-custom-component
 [commits]: https://github.com/antibill51/rika-firenet-custom-component/commits/main
 [forum]: https://community.home-assistant.io/
