@@ -31,7 +31,7 @@ or:
 ![alt text](https://raw.githubusercontent.com/antibill51/rika-firenet-custom-component/main/Screenshot/capture.png)
 
 ### HA config :
-```
+```yaml
 sensor:
   - platform: template
     sensors:
@@ -59,7 +59,7 @@ I use GSG2.0 for Pellet stock. https://domotique-home.fr/gestion-de-chauffage-st
 
 ### Lovelace card basic example : 
 
-```
+```yaml
 type: custom:config-template-card
 variables:
   IMG: states['climate.rika_domo'].attributes.entity_picture
