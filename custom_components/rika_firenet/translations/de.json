@@ -3,30 +3,30 @@
     "step": {
       "user": {
         "title": "Rika Firenet",
-        "description": "Setup integration with Rika Firenet",
+        "description": "Integrationseinrichtung mit Rika Firenet",
         "data": {
-          "username": "Username",
-          "password": "Password"
+          "username": "Benutzername",
+          "password": "Passwort"
         }
       }
     },
     "error": {
-      "auth": "Username/Password is wrong."
+      "auth": "Benutzername/Passwort ist falsch."
     },
     "abort": {
-      "single_instance_allowed": "Only a single configuration of Rika Firenet is allowed."
+      "single_instance_allowed": "Es ist nur eine einzelne Instanz der Integration erlaubt."
     }
   },
   "options": {
     "step": {
       "user": {
         "data": {
-          "defaultTemperature": "Default temperature",
-          "defaultScanInterval": "Default scan interval (15 seconds)",
-          "climate": "Climate enabled",
-          "sensor": "Sensor enabled",
-          "switch": "Switch enabled",
-          "number": "Number enabled"
+          "defaultTemperature": "Standard-Temperatur (21°C)",
+          "defaultScanInterval": "Standard-Prüfintervall (15s)",
+          "climate": "Climate aktiv",
+          "sensor": "Sensor aktiv",
+          "switch": "Switch aktiv",
+          "number": "Number aktiv"
         }
       }
     }
@@ -39,10 +39,10 @@
           "stove_off": "Ofen AUS",
           "standby": "Standby",
           "external_request": "Externe Anforderung",
-          "sub_state_unknown": "Substate unbekannt",
-          "ignition_on": "Zündung EIN",
+          "sub_state_unknown": "Substatus unbekannt",
+          "ignition_on": "Zündung",
           "starting_up": "Startphase",
-          "running": "Pelletsbetieb",
+          "running": "Regelbetrieb",
           "big_clean": "Gr. Reinigung",
           "clean": "Reinigung",
           "burn_off": "Ausbrand",
@@ -50,10 +50,10 @@
           "split_log_mode": "Scheitholzbetrieb",
           "split_log_stop_refuel": "Kein Holz hinzufügen",
           "unknown": "Unbekanntes Problem",
-          "offline": "Verlassen",
-          "smoke_fan": "Error smoke fan",
-          "error": "Error",
-          "empty_tank": "Empty tank"
+          "offline": "Offline",
+          "smoke_fan": "Fehler Abgasgebläse",
+          "error": "Fehler",
+          "empty_tank": "Tank leer"
         }
       }
     }
