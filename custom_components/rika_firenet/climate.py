@@ -41,6 +41,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
 class RikaFirenetStoveClimate(RikaFirenetEntity, ClimateEntity):
 
+    _enable_turn_on_off_backwards_compatibility = False
+  
     @property
     def entity_picture(self):
         return self._stove.get_status_picture()
